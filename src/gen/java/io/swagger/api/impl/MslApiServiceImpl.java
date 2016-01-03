@@ -1,7 +1,6 @@
 package io.swagger.api.impl;
 
-import com.kenzan.msl.server.services.CassandraAccountService;
-import com.kenzan.msl.server.services.AccountService;
+import com.kenzan.msl.account.edge.services.AccountEdgeService;
 import io.swagger.api.ApiResponseMessage;
 import io.swagger.api.MslApiService;
 import io.swagger.api.NotFoundException;
@@ -14,16 +13,14 @@ import javax.ws.rs.core.Response;
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JaxRSServerCodegen", date = "2015-12-26T11:26:56.588-06:00")
 public class MslApiServiceImpl extends MslApiService {
 
-    private AccountService accountService = new CassandraAccountService();
+    private AccountEdgeService accountService = new AccountEdgeService();
 
     @Override
     public Response getMyLibrary()
             throws NotFoundException {
         if (MslSessionToken.getInstance().isValidToken()) {
-
-            MyLibrary myLibrary;
             try {
-                myLibrary = accountService.getMyLibrary(MslSessionToken.getInstance().getTokenValue()).toBlocking().first();
+                MyLibrary myLibrary = accountService.getMyLibrary(MslSessionToken.getInstance().getTokenValue()).toBlocking().first();
                 return Response.ok().entity(new MslApiResponseMessage(MslApiResponseMessage.OK, "success", myLibrary)).build();
             } catch (Exception e) {
                 e.printStackTrace();
