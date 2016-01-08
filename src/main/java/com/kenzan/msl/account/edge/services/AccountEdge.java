@@ -1,12 +1,12 @@
 /*
  * Copyright 2015, Kenzan, All rights reserved.
  */
-package com.kenzan.msl.server.services;
+package com.kenzan.msl.account.edge.services;
 
 import io.swagger.model.MyLibrary;
 import rx.Observable;
 
-public interface AccountService {
+public interface AccountEdge {
 
     /**
      * Gets the MyLibrary object
