@@ -196,7 +196,7 @@ public class LibraryService extends LibraryServiceHelper {
 
         Result<AlbumsByUserDao> mappedResults = cassandraAccountService.mapAlbumsByUser(results).toBlocking().first();
 
-        return Translators.translateAlbumsByUserDao(mappedResults);
+        return Translators.translateAlbumsByUserDao((Iterable<AlbumsByUserDao>) mappedResults);
     }
 
     /**
@@ -214,7 +214,7 @@ public class LibraryService extends LibraryServiceHelper {
 
         Result<ArtistsByUserDao> mappedResults = cassandraAccountService.mapArtistByUser(results).toBlocking().first();
 
-        return Translators.translateArtistByUserDao(mappedResults);
+        return Translators.translateArtistByUserDao((Iterable<ArtistsByUserDao>) mappedResults);
     }
 
     /**
@@ -231,7 +231,7 @@ public class LibraryService extends LibraryServiceHelper {
 
         Result<SongsByUserDao> mappedResults = cassandraAccountService.mapSongsByUser(results).toBlocking().first();
 
-        return Translators.translateSongsByUserDao(mappedResults);
+        return Translators.translateSongsByUserDao((Iterable<SongsByUserDao>) mappedResults);
     }
 
     /**
