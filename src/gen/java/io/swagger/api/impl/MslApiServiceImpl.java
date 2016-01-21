@@ -1,6 +1,7 @@
 package io.swagger.api.impl;
 
 import com.kenzan.msl.account.edge.services.AccountEdgeService;
+import com.kenzan.msl.account.edge.services.LibraryService;
 import io.swagger.api.ApiResponseMessage;
 import io.swagger.api.MslApiService;
 import io.swagger.api.NotFoundException;
@@ -13,7 +14,8 @@ import javax.ws.rs.core.Response;
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JaxRSServerCodegen", date = "2015-12-26T11:26:56.588-06:00")
 public class MslApiServiceImpl extends MslApiService {
 
-    private AccountEdgeService accountService = new AccountEdgeService();
+    private LibraryService libraryService = new LibraryService();
+    private AccountEdgeService accountService = new AccountEdgeService(libraryService);
 
     @Override
     public Response getMyLibrary()

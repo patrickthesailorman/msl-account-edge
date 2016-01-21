@@ -16,9 +16,9 @@ public class AccountEdgeService
     private LibraryService libraryService;
     private CassandraAccountService cassandraAccountService;
 
-    public AccountEdgeService() {
+    public AccountEdgeService( LibraryService _libraryService ) {
         cassandraAccountService = CassandraAccountService.getInstance();
-        libraryService = new LibraryService();
+        libraryService = _libraryService;
     }
 
     /**

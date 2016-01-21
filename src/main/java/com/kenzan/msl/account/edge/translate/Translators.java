@@ -39,9 +39,9 @@ public class Translators extends AccountClientTranslators {
 
     public static ArtistsByUserDao translate(ArtistBo artist) {
         ArtistsByUserDao model = new ArtistsByUserDao();
-        model.setArtistName(artist.getArtistName());
-        model.setArtistMbid(artist.getArtistMbid());
         model.setArtistId(artist.getArtistId());
+        model.setArtistMbid(artist.getArtistMbid());
+        model.setArtistName(artist.getArtistName());
         model.setContentType("Artist");
         if ( artist.getFavoritesTimestamp() != null ) {
             model.setFavoritesTimestamp(new Date(Long.parseLong(artist.getFavoritesTimestamp())));
