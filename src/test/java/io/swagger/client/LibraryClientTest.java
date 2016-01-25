@@ -1,6 +1,6 @@
 package io.swagger.client;
 
-import io.swagger.api.impl.MslApiResponseMessage;
+import io.swagger.api.impl.AccountEdgeApiResponseMessage;
 import org.apache.log4j.Level;
 import org.junit.Before;
 
@@ -25,7 +25,7 @@ public class LibraryClientTest {
     @Test
     public void testGetMyLibrary() {
         logger.debug("LibraryClientTest.testGetMyLibrary");
-        MslApiResponseMessage myLibrary = libraryClient.getLibrary(ClientConstants.TEST_TOKEN);
+        AccountEdgeApiResponseMessage myLibrary = libraryClient.getLibrary(ClientConstants.TEST_TOKEN);
         assertNotNull(myLibrary);
         assertNotNull(myLibrary.getData());
         assertEquals("get my library call is successful", "success", myLibrary.getMessage());
@@ -41,7 +41,7 @@ public class LibraryClientTest {
     @Test
     public void testAddSong() {
         logger.debug("LibraryClientTest.testAddSong");
-        MslApiResponseMessage addSong = libraryClient.addSongToLibrary(ClientConstants.TEST_SONG_ID,
+        AccountEdgeApiResponseMessage addSong = libraryClient.addSongToLibrary(ClientConstants.TEST_SONG_ID,
                                                                        ClientConstants.TEST_TOKEN);
         assertNotNull(addSong);
         assertEquals("add song to library call is successful", "success", addSong.getMessage());
@@ -57,7 +57,7 @@ public class LibraryClientTest {
     @Test
     public void testRemoveSong() {
         logger.debug("LibraryClientTest.testRemoveSong");
-        MslApiResponseMessage response = libraryClient.removeSongFromLibrary(ClientConstants.TEST_SONG_ID,
+        AccountEdgeApiResponseMessage response = libraryClient.removeSongFromLibrary(ClientConstants.TEST_SONG_ID,
                                                                              ClientConstants.TIMESTAMP,
                                                                              ClientConstants.TEST_TOKEN);
         assertNotNull(response);
@@ -76,7 +76,7 @@ public class LibraryClientTest {
     @Test
     public void testAddArtist() {
         logger.debug("LibraryClientTest.testAddArtist");
-        MslApiResponseMessage addArtist = libraryClient.addArtistToLibrary(ClientConstants.TEST_ARTIST_ID,
+        AccountEdgeApiResponseMessage addArtist = libraryClient.addArtistToLibrary(ClientConstants.TEST_ARTIST_ID,
                                                                            ClientConstants.TEST_TOKEN);
         assertNotNull(addArtist);
         assertEquals("add song to library call is successful", "success", addArtist.getMessage());
@@ -92,7 +92,7 @@ public class LibraryClientTest {
     @Test
     public void testRemoveArtist() {
         logger.debug("LibraryClientTest.testRemoveArtist");
-        MslApiResponseMessage response = libraryClient.removeArtistFromLibrary(ClientConstants.TEST_ARTIST_ID,
+        AccountEdgeApiResponseMessage response = libraryClient.removeArtistFromLibrary(ClientConstants.TEST_ARTIST_ID,
                                                                                ClientConstants.TIMESTAMP,
                                                                                ClientConstants.TEST_TOKEN);
         assertNotNull(response);
@@ -111,7 +111,7 @@ public class LibraryClientTest {
     @Test
     public void testAddAlbum() {
         logger.debug("LibraryClientTest.testAddAlbum");
-        MslApiResponseMessage addAlbum = libraryClient.addAlbumToLibrary(ClientConstants.TEST_ALBUM_ID,
+        AccountEdgeApiResponseMessage addAlbum = libraryClient.addAlbumToLibrary(ClientConstants.TEST_ALBUM_ID,
                                                                          ClientConstants.TEST_TOKEN);
         assertNotNull(addAlbum);
         assertEquals("add song to library call is successful", "success", addAlbum.getMessage());
@@ -127,7 +127,7 @@ public class LibraryClientTest {
     @Test
     public void testRemoveAlbum() {
         logger.debug("LibraryClientTest.testRemoveAlbum");
-        MslApiResponseMessage response = libraryClient.removeAlbumFromLibrary(ClientConstants.TEST_ALBUM_ID,
+        AccountEdgeApiResponseMessage response = libraryClient.removeAlbumFromLibrary(ClientConstants.TEST_ALBUM_ID,
                                                                               ClientConstants.TIMESTAMP,
                                                                               ClientConstants.TEST_TOKEN);
         assertNotNull(response);

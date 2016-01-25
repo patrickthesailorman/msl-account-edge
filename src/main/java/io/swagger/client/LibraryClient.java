@@ -1,6 +1,6 @@
 package io.swagger.client;
 
-import io.swagger.api.impl.MslApiResponseMessage;
+import io.swagger.api.impl.AccountEdgeApiResponseMessage;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
@@ -18,7 +18,7 @@ public class LibraryClient {
         client = new ResteasyClientBuilder().build();
     }
 
-    public MslApiResponseMessage getLibrary(String sessionToken) {
+    public AccountEdgeApiResponseMessage getLibrary(String sessionToken) {
 
         ResteasyWebTarget target = client.target(String.format("%s/v1/accountedge/users/mylibrary",
                                                                ClientConstants.BASE_URL));
@@ -28,12 +28,12 @@ public class LibraryClient {
             throw new RuntimeException(String.format("Failed : HTTP error code : %s", response.getStatus()));
         }
 
-        return response.readEntity(MslApiResponseMessage.class);
+        return response.readEntity(AccountEdgeApiResponseMessage.class);
     }
 
     // ============================================================================== SONG
 
-    public MslApiResponseMessage addSongToLibrary(String songId, String sessionToken) {
+    public AccountEdgeApiResponseMessage addSongToLibrary(String songId, String sessionToken) {
         ResteasyWebTarget target = client.target(String.format("%s/v1/accountedge/users/mylibrary/addsong/%s",
                                                                ClientConstants.BASE_URL, songId));
 
@@ -43,10 +43,10 @@ public class LibraryClient {
         if ( response.getStatus() != 200 ) {
             throw new RuntimeException(String.format("Failed : HTTP error code : %s", response.getStatus()));
         }
-        return response.readEntity(MslApiResponseMessage.class);
+        return response.readEntity(AccountEdgeApiResponseMessage.class);
     }
 
-    public MslApiResponseMessage removeSongFromLibrary(String songId, String timestamp, String sessionToken) {
+    public AccountEdgeApiResponseMessage removeSongFromLibrary(String songId, String timestamp, String sessionToken) {
         ResteasyWebTarget target = client.target(String.format("%s/v1/accountedge/users/mylibrary/removesong/%s/%s",
                                                                ClientConstants.BASE_URL, songId, timestamp));
 
@@ -55,12 +55,12 @@ public class LibraryClient {
         if ( response.getStatus() != 200 ) {
             throw new RuntimeException(String.format("Failed : HTTP error code : %s", response.getStatus()));
         }
-        return response.readEntity(MslApiResponseMessage.class);
+        return response.readEntity(AccountEdgeApiResponseMessage.class);
     }
 
     // =============================================================================== ALBUM
 
-    public MslApiResponseMessage addAlbumToLibrary(String albumId, String sessionToken) {
+    public AccountEdgeApiResponseMessage addAlbumToLibrary(String albumId, String sessionToken) {
         ResteasyWebTarget target = client.target(String.format("%s/v1/accountedge/users/mylibrary/addalbum/%s",
                                                                ClientConstants.BASE_URL, albumId));
 
@@ -70,10 +70,10 @@ public class LibraryClient {
         if ( response.getStatus() != 200 ) {
             throw new RuntimeException(String.format("Failed : HTTP error code : %s", response.getStatus()));
         }
-        return response.readEntity(MslApiResponseMessage.class);
+        return response.readEntity(AccountEdgeApiResponseMessage.class);
     }
 
-    public MslApiResponseMessage removeAlbumFromLibrary(String albumId, String timestamp, String sessionToken) {
+    public AccountEdgeApiResponseMessage removeAlbumFromLibrary(String albumId, String timestamp, String sessionToken) {
         ResteasyWebTarget target = client.target(String.format("%s/v1/accountedge/users/mylibrary/removealbum/%s/%s",
                                                                ClientConstants.BASE_URL, albumId, timestamp));
 
@@ -82,12 +82,12 @@ public class LibraryClient {
         if ( response.getStatus() != 200 ) {
             throw new RuntimeException(String.format("Failed : HTTP error code : %s", response.getStatus()));
         }
-        return response.readEntity(MslApiResponseMessage.class);
+        return response.readEntity(AccountEdgeApiResponseMessage.class);
     }
 
     // =============================================================================== ARTIST
 
-    public MslApiResponseMessage addArtistToLibrary(String artistId, String sessionToken) {
+    public AccountEdgeApiResponseMessage addArtistToLibrary(String artistId, String sessionToken) {
         ResteasyWebTarget target = client.target(String.format("%s/v1/accountedge/users/mylibrary/addartist/%s",
                                                                ClientConstants.BASE_URL, artistId));
 
@@ -97,10 +97,10 @@ public class LibraryClient {
         if ( response.getStatus() != 200 ) {
             throw new RuntimeException(String.format("Failed : HTTP error code : %s", response.getStatus()));
         }
-        return response.readEntity(MslApiResponseMessage.class);
+        return response.readEntity(AccountEdgeApiResponseMessage.class);
     }
 
-    public MslApiResponseMessage removeArtistFromLibrary(String artistId, String timestamp, String sessionToken) {
+    public AccountEdgeApiResponseMessage removeArtistFromLibrary(String artistId, String timestamp, String sessionToken) {
         ResteasyWebTarget target = client.target(String.format("%s/v1/accountedge/users/mylibrary/removeartist/%s/%s",
                                                                ClientConstants.BASE_URL, artistId, timestamp));
 
@@ -109,6 +109,6 @@ public class LibraryClient {
         if ( response.getStatus() != 200 ) {
             throw new RuntimeException(String.format("Failed : HTTP error code : %s", response.getStatus()));
         }
-        return response.readEntity(MslApiResponseMessage.class);
+        return response.readEntity(AccountEdgeApiResponseMessage.class);
     }
 }
