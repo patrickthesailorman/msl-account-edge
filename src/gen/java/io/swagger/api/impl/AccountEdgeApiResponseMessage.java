@@ -2,7 +2,7 @@ package io.swagger.api.impl;
 
 import javax.xml.bind.annotation.XmlTransient;
 
-public class MslApiResponseMessage{
+public class AccountEdgeApiResponseMessage {
     public static final int OK = 0;
     public static final int ERROR = 1;
     public static final int WARNING = 2;
@@ -14,15 +14,15 @@ public class MslApiResponseMessage{
     String message;
     Object data;
 
-    public MslApiResponseMessage() {
+    public AccountEdgeApiResponseMessage() {
     }
 
-    public MslApiResponseMessage(int code, String message) {
+    public AccountEdgeApiResponseMessage(int code, String message) {
         initCode(code);
         this.message = message;
     }
 
-    public MslApiResponseMessage(int code, String message, Object obj) {
+    public AccountEdgeApiResponseMessage(int code, String message, Object obj) {
         initCode(code);
         this.message = message;
         this.data = obj;
