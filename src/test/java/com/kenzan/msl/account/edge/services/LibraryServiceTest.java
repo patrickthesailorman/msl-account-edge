@@ -297,7 +297,7 @@ public class LibraryServiceTest {
         expect(cassandraAccountService.mapAlbumsByUser(observableResultSet))
             .andReturn(Observable.just(albumsByUserDaoResult));
 
-        Iterator albumsByUserDaoIterator = tc.albumsByUserDaoArrayList.iterator();
+        Iterator<AlbumsByUserDao> albumsByUserDaoIterator = tc.albumsByUserDaoArrayList.iterator();
         PowerMockito.when(albumsByUserDaoResult.iterator()).thenReturn(albumsByUserDaoIterator);
     }
 
@@ -308,7 +308,7 @@ public class LibraryServiceTest {
         expect(cassandraAccountService.mapSongsByUser(observableResultSet)).andReturn(Observable
                                                                                           .just(songsByUserDaoResult));
 
-        Iterator songsByUserDaoIterator = tc.songsByUserDaoArrayList.iterator();
+        Iterator<SongsByUserDao> songsByUserDaoIterator = tc.songsByUserDaoArrayList.iterator();
         PowerMockito.when(songsByUserDaoResult.iterator()).thenReturn(songsByUserDaoIterator);
     }
 
@@ -319,7 +319,7 @@ public class LibraryServiceTest {
         expect(cassandraAccountService.mapArtistByUser(observableResultSet))
             .andReturn(Observable.just(artistsByUserDaoResult));
 
-        Iterator artistsByUserDaoIterator = tc.artistsByUserDaoArrayList.iterator();
+        Iterator<ArtistsByUserDao> artistsByUserDaoIterator = tc.artistsByUserDaoArrayList.iterator();
         PowerMockito.when(artistsByUserDaoResult.iterator()).thenReturn(artistsByUserDaoIterator);
     }
 
