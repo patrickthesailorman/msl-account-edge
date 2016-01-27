@@ -37,25 +37,24 @@ public class LibraryServiceHelper {
         if ( mappingResult == null ) {
             return Optional.absent();
         }
-        else {
-            ArtistBo artistBo = new ArtistBo();
-            SongsAlbumsByArtistDao songsAlbumsByArtistDao = mappingResult.one();
 
-            artistBo.setArtistId(songsAlbumsByArtistDao.getArtistId());
-            artistBo.setArtistName(songsAlbumsByArtistDao.getArtistName());
+        ArtistBo artistBo = new ArtistBo();
+        SongsAlbumsByArtistDao songsAlbumsByArtistDao = mappingResult.one();
 
-            if ( songsAlbumsByArtistDao.getArtistGenres() != null
-                && songsAlbumsByArtistDao.getArtistGenres().size() > 0 ) {
-                artistBo.setGenre(songsAlbumsByArtistDao.getArtistGenres().iterator().next());
-            }
-            if ( songsAlbumsByArtistDao.getSimilarArtists() != null ) {
-                for ( UUID similarArtistUuid : songsAlbumsByArtistDao.getSimilarArtists().keySet() ) {
-                    artistBo.getSimilarArtistsList().add(similarArtistUuid.toString());
-                }
-            }
+        artistBo.setArtistId(songsAlbumsByArtistDao.getArtistId());
+        artistBo.setArtistName(songsAlbumsByArtistDao.getArtistName());
 
-            return Optional.of(artistBo);
+        if ( songsAlbumsByArtistDao.getArtistGenres() != null
+            && songsAlbumsByArtistDao.getArtistGenres().size() > 0 ) {
+            artistBo.setGenre(songsAlbumsByArtistDao.getArtistGenres().iterator().next());
         }
+        if ( songsAlbumsByArtistDao.getSimilarArtists() != null ) {
+            for ( UUID similarArtistUuid : songsAlbumsByArtistDao.getSimilarArtists().keySet() ) {
+                artistBo.getSimilarArtistsList().add(similarArtistUuid.toString());
+            }
+        }
+
+        return Optional.of(artistBo);
     }
 
     /**
@@ -76,22 +75,21 @@ public class LibraryServiceHelper {
         if ( null == mapResults ) {
             return Optional.absent();
         }
-        else {
-            AlbumBo albumBo = new AlbumBo();
-            SongsArtistByAlbumDao songsArtistByAlbumDao = mapResults.one();
 
-            albumBo.setAlbumId(songsArtistByAlbumDao.getAlbumId());
-            albumBo.setAlbumName(songsArtistByAlbumDao.getAlbumName());
-            albumBo.setArtistId(songsArtistByAlbumDao.getArtistId());
-            albumBo.setArtistName(songsArtistByAlbumDao.getArtistName());
-            albumBo.setImageLink(songsArtistByAlbumDao.getImageLink());
+        AlbumBo albumBo = new AlbumBo();
+        SongsArtistByAlbumDao songsArtistByAlbumDao = mapResults.one();
 
-            if ( songsArtistByAlbumDao.getArtistGenres() != null && songsArtistByAlbumDao.getArtistGenres().size() > 0 ) {
-                albumBo.setGenre(songsArtistByAlbumDao.getArtistGenres().iterator().next());
-            }
+        albumBo.setAlbumId(songsArtistByAlbumDao.getAlbumId());
+        albumBo.setAlbumName(songsArtistByAlbumDao.getAlbumName());
+        albumBo.setArtistId(songsArtistByAlbumDao.getArtistId());
+        albumBo.setArtistName(songsArtistByAlbumDao.getArtistName());
+        albumBo.setImageLink(songsArtistByAlbumDao.getImageLink());
 
-            return Optional.of(albumBo);
+        if ( songsArtistByAlbumDao.getArtistGenres() != null && songsArtistByAlbumDao.getArtistGenres().size() > 0 ) {
+            albumBo.setGenre(songsArtistByAlbumDao.getArtistGenres().iterator().next());
         }
+
+        return Optional.of(albumBo);
     }
 
     /**
@@ -111,24 +109,23 @@ public class LibraryServiceHelper {
         if ( null == mapResults ) {
             return Optional.absent();
         }
-        else {
-            SongBo songBo = new SongBo();
-            AlbumArtistBySongDao albumArtistBySongDao = mapResults.one();
+        
+		SongBo songBo = new SongBo();
+		AlbumArtistBySongDao albumArtistBySongDao = mapResults.one();
 
-            songBo.setSongId(albumArtistBySongDao.getSongId());
-            songBo.setSongName(albumArtistBySongDao.getSongName());
-            songBo.setAlbumId(albumArtistBySongDao.getAlbumId());
-            songBo.setAlbumName(albumArtistBySongDao.getAlbumName());
-            songBo.setArtistId(albumArtistBySongDao.getArtistId());
-            songBo.setArtistName(albumArtistBySongDao.getArtistName());
-            songBo.setDuration(albumArtistBySongDao.getSongDuration());
-            songBo.setYear(albumArtistBySongDao.getAlbumYear());
+		songBo.setSongId(albumArtistBySongDao.getSongId());
+		songBo.setSongName(albumArtistBySongDao.getSongName());
+		songBo.setAlbumId(albumArtistBySongDao.getAlbumId());
+		songBo.setAlbumName(albumArtistBySongDao.getAlbumName());
+		songBo.setArtistId(albumArtistBySongDao.getArtistId());
+		songBo.setArtistName(albumArtistBySongDao.getArtistName());
+		songBo.setDuration(albumArtistBySongDao.getSongDuration());
+		songBo.setYear(albumArtistBySongDao.getAlbumYear());
 
-            if ( albumArtistBySongDao.getArtistGenres() != null && albumArtistBySongDao.getArtistGenres().size() > 0 ) {
-                songBo.setGenre(albumArtistBySongDao.getArtistGenres().iterator().next());
-            }
+		if ( albumArtistBySongDao.getArtistGenres() != null && albumArtistBySongDao.getArtistGenres().size() > 0 ) {
+		    songBo.setGenre(albumArtistBySongDao.getArtistGenres().iterator().next());
+		}
 
-            return Optional.of(songBo);
-        }
+		return Optional.of(songBo);
     }
 }
