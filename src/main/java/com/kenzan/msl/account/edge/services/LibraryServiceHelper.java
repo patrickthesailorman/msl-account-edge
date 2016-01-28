@@ -44,8 +44,7 @@ public class LibraryServiceHelper {
         artistBo.setArtistId(songsAlbumsByArtistDao.getArtistId());
         artistBo.setArtistName(songsAlbumsByArtistDao.getArtistName());
 
-        if ( songsAlbumsByArtistDao.getArtistGenres() != null
-            && songsAlbumsByArtistDao.getArtistGenres().size() > 0 ) {
+        if ( songsAlbumsByArtistDao.getArtistGenres() != null && songsAlbumsByArtistDao.getArtistGenres().size() > 0 ) {
             artistBo.setGenre(songsAlbumsByArtistDao.getArtistGenres().iterator().next());
         }
         if ( songsAlbumsByArtistDao.getSimilarArtists() != null ) {
@@ -109,23 +108,23 @@ public class LibraryServiceHelper {
         if ( null == mapResults ) {
             return Optional.absent();
         }
-        
-		SongBo songBo = new SongBo();
-		AlbumArtistBySongDao albumArtistBySongDao = mapResults.one();
 
-		songBo.setSongId(albumArtistBySongDao.getSongId());
-		songBo.setSongName(albumArtistBySongDao.getSongName());
-		songBo.setAlbumId(albumArtistBySongDao.getAlbumId());
-		songBo.setAlbumName(albumArtistBySongDao.getAlbumName());
-		songBo.setArtistId(albumArtistBySongDao.getArtistId());
-		songBo.setArtistName(albumArtistBySongDao.getArtistName());
-		songBo.setDuration(albumArtistBySongDao.getSongDuration());
-		songBo.setYear(albumArtistBySongDao.getAlbumYear());
+        SongBo songBo = new SongBo();
+        AlbumArtistBySongDao albumArtistBySongDao = mapResults.one();
 
-		if ( albumArtistBySongDao.getArtistGenres() != null && albumArtistBySongDao.getArtistGenres().size() > 0 ) {
-		    songBo.setGenre(albumArtistBySongDao.getArtistGenres().iterator().next());
-		}
+        songBo.setSongId(albumArtistBySongDao.getSongId());
+        songBo.setSongName(albumArtistBySongDao.getSongName());
+        songBo.setAlbumId(albumArtistBySongDao.getAlbumId());
+        songBo.setAlbumName(albumArtistBySongDao.getAlbumName());
+        songBo.setArtistId(albumArtistBySongDao.getArtistId());
+        songBo.setArtistName(albumArtistBySongDao.getArtistName());
+        songBo.setDuration(albumArtistBySongDao.getSongDuration());
+        songBo.setYear(albumArtistBySongDao.getAlbumYear());
 
-		return Optional.of(songBo);
+        if ( albumArtistBySongDao.getArtistGenres() != null && albumArtistBySongDao.getArtistGenres().size() > 0 ) {
+            songBo.setGenre(albumArtistBySongDao.getArtistGenres().iterator().next());
+        }
+
+        return Optional.of(songBo);
     }
 }

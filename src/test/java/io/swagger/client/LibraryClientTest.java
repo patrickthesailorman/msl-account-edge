@@ -42,7 +42,7 @@ public class LibraryClientTest {
     public void testAddSong() {
         logger.debug("LibraryClientTest.testAddSong");
         AccountEdgeApiResponseMessage addSong = libraryClient.addSongToLibrary(ClientConstants.TEST_SONG_ID,
-                                                                       ClientConstants.TEST_TOKEN);
+                                                                               ClientConstants.TEST_TOKEN);
         assertNotNull(addSong);
         assertEquals("add song to library call is successful", "success", addSong.getMessage());
     }
@@ -58,8 +58,8 @@ public class LibraryClientTest {
     public void testRemoveSong() {
         logger.debug("LibraryClientTest.testRemoveSong");
         AccountEdgeApiResponseMessage response = libraryClient.removeSongFromLibrary(ClientConstants.TEST_SONG_ID,
-                                                                             ClientConstants.TIMESTAMP,
-                                                                             ClientConstants.TEST_TOKEN);
+                                                                                     ClientConstants.TIMESTAMP,
+                                                                                     ClientConstants.TEST_TOKEN);
         assertNotNull(response);
         assertEquals("add song to library call is successful", "success", response.getMessage());
     }
@@ -77,7 +77,7 @@ public class LibraryClientTest {
     public void testAddArtist() {
         logger.debug("LibraryClientTest.testAddArtist");
         AccountEdgeApiResponseMessage addArtist = libraryClient.addArtistToLibrary(ClientConstants.TEST_ARTIST_ID,
-                                                                           ClientConstants.TEST_TOKEN);
+                                                                                   ClientConstants.TEST_TOKEN);
         assertNotNull(addArtist);
         assertEquals("add song to library call is successful", "success", addArtist.getMessage());
     }
@@ -93,8 +93,8 @@ public class LibraryClientTest {
     public void testRemoveArtist() {
         logger.debug("LibraryClientTest.testRemoveArtist");
         AccountEdgeApiResponseMessage response = libraryClient.removeArtistFromLibrary(ClientConstants.TEST_ARTIST_ID,
-                                                                               ClientConstants.TIMESTAMP,
-                                                                               ClientConstants.TEST_TOKEN);
+                                                                                       ClientConstants.TIMESTAMP,
+                                                                                       ClientConstants.TEST_TOKEN);
         assertNotNull(response);
         assertEquals("add song to library call is successful", "success", response.getMessage());
     }
@@ -112,7 +112,7 @@ public class LibraryClientTest {
     public void testAddAlbum() {
         logger.debug("LibraryClientTest.testAddAlbum");
         AccountEdgeApiResponseMessage addAlbum = libraryClient.addAlbumToLibrary(ClientConstants.TEST_ALBUM_ID,
-                                                                         ClientConstants.TEST_TOKEN);
+                                                                                 ClientConstants.TEST_TOKEN);
         assertNotNull(addAlbum);
         assertEquals("add song to library call is successful", "success", addAlbum.getMessage());
     }
@@ -128,8 +128,8 @@ public class LibraryClientTest {
     public void testRemoveAlbum() {
         logger.debug("LibraryClientTest.testRemoveAlbum");
         AccountEdgeApiResponseMessage response = libraryClient.removeAlbumFromLibrary(ClientConstants.TEST_ALBUM_ID,
-                                                                              ClientConstants.TIMESTAMP,
-                                                                              ClientConstants.TEST_TOKEN);
+                                                                                      ClientConstants.TIMESTAMP,
+                                                                                      ClientConstants.TEST_TOKEN);
         assertNotNull(response);
         assertEquals("add song to library call is successful", "success", response.getMessage());
     }

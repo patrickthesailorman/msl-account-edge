@@ -20,7 +20,7 @@ public class LibraryClient {
 
     public AccountEdgeApiResponseMessage getLibrary(String sessionToken) {
 
-        ResteasyWebTarget target = client.target(String.format("%s/v1/accountedge/users/mylibrary",
+        ResteasyWebTarget target = client.target(String.format("%s/account-edge/users/mylibrary",
                                                                ClientConstants.BASE_URL));
         Response response = target.request().cookie(new NewCookie("sessionToken", sessionToken)).get();
 
@@ -34,7 +34,7 @@ public class LibraryClient {
     // ============================================================================== SONG
 
     public AccountEdgeApiResponseMessage addSongToLibrary(String songId, String sessionToken) {
-        ResteasyWebTarget target = client.target(String.format("%s/v1/accountedge/users/mylibrary/addsong/%s",
+        ResteasyWebTarget target = client.target(String.format("%s/account-edge/users/mylibrary/addsong/%s",
                                                                ClientConstants.BASE_URL, songId));
 
         Response response = target.request().cookie(new NewCookie("sessionToken", sessionToken))
@@ -47,7 +47,7 @@ public class LibraryClient {
     }
 
     public AccountEdgeApiResponseMessage removeSongFromLibrary(String songId, String timestamp, String sessionToken) {
-        ResteasyWebTarget target = client.target(String.format("%s/v1/accountedge/users/mylibrary/removesong/%s/%s",
+        ResteasyWebTarget target = client.target(String.format("%s/account-edge/users/mylibrary/removesong/%s/%s",
                                                                ClientConstants.BASE_URL, songId, timestamp));
 
         Response response = target.request().cookie(new NewCookie("sessionToken", sessionToken)).delete();
@@ -61,7 +61,7 @@ public class LibraryClient {
     // =============================================================================== ALBUM
 
     public AccountEdgeApiResponseMessage addAlbumToLibrary(String albumId, String sessionToken) {
-        ResteasyWebTarget target = client.target(String.format("%s/v1/accountedge/users/mylibrary/addalbum/%s",
+        ResteasyWebTarget target = client.target(String.format("%s/account-edge/users/mylibrary/addalbum/%s",
                                                                ClientConstants.BASE_URL, albumId));
 
         Response response = target.request().cookie(new NewCookie("sessionToken", sessionToken))
@@ -74,7 +74,7 @@ public class LibraryClient {
     }
 
     public AccountEdgeApiResponseMessage removeAlbumFromLibrary(String albumId, String timestamp, String sessionToken) {
-        ResteasyWebTarget target = client.target(String.format("%s/v1/accountedge/users/mylibrary/removealbum/%s/%s",
+        ResteasyWebTarget target = client.target(String.format("%s/account-edge/users/mylibrary/removealbum/%s/%s",
                                                                ClientConstants.BASE_URL, albumId, timestamp));
 
         Response response = target.request().cookie(new NewCookie("sessionToken", sessionToken)).delete();
@@ -88,7 +88,7 @@ public class LibraryClient {
     // =============================================================================== ARTIST
 
     public AccountEdgeApiResponseMessage addArtistToLibrary(String artistId, String sessionToken) {
-        ResteasyWebTarget target = client.target(String.format("%s/v1/accountedge/users/mylibrary/addartist/%s",
+        ResteasyWebTarget target = client.target(String.format("%s/account-edge/users/mylibrary/addartist/%s",
                                                                ClientConstants.BASE_URL, artistId));
 
         Response response = target.request().cookie(new NewCookie("sessionToken", sessionToken))
@@ -101,7 +101,7 @@ public class LibraryClient {
     }
 
     public AccountEdgeApiResponseMessage removeArtistFromLibrary(String artistId, String timestamp, String sessionToken) {
-        ResteasyWebTarget target = client.target(String.format("%s/v1/accountedge/users/mylibrary/removeartist/%s/%s",
+        ResteasyWebTarget target = client.target(String.format("%s/account-edge/users/mylibrary/removeartist/%s/%s",
                                                                ClientConstants.BASE_URL, artistId, timestamp));
 
         Response response = target.request().cookie(new NewCookie("sessionToken", sessionToken)).delete();
