@@ -6,9 +6,9 @@ package com.kenzan.msl.account.edge.services;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
-import com.kenzan.msl.catalog.client.dao.AlbumArtistBySongDao;
-import com.kenzan.msl.catalog.client.dao.SongsAlbumsByArtistDao;
-import com.kenzan.msl.catalog.client.dao.SongsArtistByAlbumDao;
+import com.kenzan.msl.catalog.client.dto.AlbumArtistBySongDto;
+import com.kenzan.msl.catalog.client.dto.SongsAlbumsByArtistDto;
+import com.kenzan.msl.catalog.client.dto.SongsArtistByAlbumDto;
 import com.kenzan.msl.catalog.client.services.CassandraCatalogService;
 import com.kenzan.msl.common.bo.AlbumBo;
 import com.kenzan.msl.common.bo.ArtistBo;
@@ -31,7 +31,7 @@ public class LibraryServiceHelper {
         Observable<ResultSet> observableArtist = cassandraCatalogService.getSongsAlbumsByArtist(artistId,
                                                                                                 Optional.absent());
 
-        Result<SongsAlbumsByArtistDao> mappingResult = cassandraCatalogService.mapSongsAlbumsByArtist(observableArtist)
+        Result<SongsAlbumsByArtistDto> mappingResult = cassandraCatalogService.mapSongsAlbumsByArtist(observableArtist)
             .toBlocking().first();
 
         if ( mappingResult == null ) {
@@ -39,16 +39,16 @@ public class LibraryServiceHelper {
         }
 
         ArtistBo artistBo = new ArtistBo();
-        SongsAlbumsByArtistDao songsAlbumsByArtistDao = mappingResult.one();
+        SongsAlbumsByArtistDto songsAlbumsByArtistDto = mappingResult.one();
 
-        artistBo.setArtistId(songsAlbumsByArtistDao.getArtistId());
-        artistBo.setArtistName(songsAlbumsByArtistDao.getArtistName());
+        artistBo.setArtistId(songsAlbumsByArtistDto.getArtistId());
+        artistBo.setArtistName(songsAlbumsByArtistDto.getArtistName());
 
-        if ( songsAlbumsByArtistDao.getArtistGenres() != null && songsAlbumsByArtistDao.getArtistGenres().size() > 0 ) {
-            artistBo.setGenre(songsAlbumsByArtistDao.getArtistGenres().iterator().next());
+        if ( songsAlbumsByArtistDto.getArtistGenres() != null && songsAlbumsByArtistDto.getArtistGenres().size() > 0 ) {
+            artistBo.setGenre(songsAlbumsByArtistDto.getArtistGenres().iterator().next());
         }
-        if ( songsAlbumsByArtistDao.getSimilarArtists() != null ) {
-            for ( UUID similarArtistUuid : songsAlbumsByArtistDao.getSimilarArtists().keySet() ) {
+        if ( songsAlbumsByArtistDto.getSimilarArtists() != null ) {
+            for ( UUID similarArtistUuid : songsAlbumsByArtistDto.getSimilarArtists().keySet() ) {
                 artistBo.getSimilarArtistsList().add(similarArtistUuid.toString());
             }
         }
@@ -68,7 +68,7 @@ public class LibraryServiceHelper {
         Observable<ResultSet> observableAlbum = cassandraCatalogService.getSongsArtistByAlbum(albumId,
                                                                                               Optional.absent());
 
-        Result<SongsArtistByAlbumDao> mapResults = cassandraCatalogService.mapSongsArtistByAlbum(observableAlbum)
+        Result<SongsArtistByAlbumDto> mapResults = cassandraCatalogService.mapSongsArtistByAlbum(observableAlbum)
             .toBlocking().first();
 
         if ( null == mapResults ) {
@@ -76,16 +76,16 @@ public class LibraryServiceHelper {
         }
 
         AlbumBo albumBo = new AlbumBo();
-        SongsArtistByAlbumDao songsArtistByAlbumDao = mapResults.one();
+        SongsArtistByAlbumDto songsArtistByAlbumDto = mapResults.one();
 
-        albumBo.setAlbumId(songsArtistByAlbumDao.getAlbumId());
-        albumBo.setAlbumName(songsArtistByAlbumDao.getAlbumName());
-        albumBo.setArtistId(songsArtistByAlbumDao.getArtistId());
-        albumBo.setArtistName(songsArtistByAlbumDao.getArtistName());
-        albumBo.setImageLink(songsArtistByAlbumDao.getImageLink());
+        albumBo.setAlbumId(songsArtistByAlbumDto.getAlbumId());
+        albumBo.setAlbumName(songsArtistByAlbumDto.getAlbumName());
+        albumBo.setArtistId(songsArtistByAlbumDto.getArtistId());
+        albumBo.setArtistName(songsArtistByAlbumDto.getArtistName());
+        albumBo.setImageLink(songsArtistByAlbumDto.getImageLink());
 
-        if ( songsArtistByAlbumDao.getArtistGenres() != null && songsArtistByAlbumDao.getArtistGenres().size() > 0 ) {
-            albumBo.setGenre(songsArtistByAlbumDao.getArtistGenres().iterator().next());
+        if ( songsArtistByAlbumDto.getArtistGenres() != null && songsArtistByAlbumDto.getArtistGenres().size() > 0 ) {
+            albumBo.setGenre(songsArtistByAlbumDto.getArtistGenres().iterator().next());
         }
 
         return Optional.of(albumBo);
@@ -102,7 +102,7 @@ public class LibraryServiceHelper {
 
         Observable<ResultSet> observableSong = cassandraCatalogService.getAlbumArtistBySong(songId, Optional.absent());
 
-        Result<AlbumArtistBySongDao> mapResults = cassandraCatalogService.mapAlbumArtistBySong(observableSong)
+        Result<AlbumArtistBySongDto> mapResults = cassandraCatalogService.mapAlbumArtistBySong(observableSong)
             .toBlocking().first();
 
         if ( null == mapResults ) {
@@ -110,19 +110,19 @@ public class LibraryServiceHelper {
         }
 
         SongBo songBo = new SongBo();
-        AlbumArtistBySongDao albumArtistBySongDao = mapResults.one();
+        AlbumArtistBySongDto albumArtistBySongDto = mapResults.one();
 
-        songBo.setSongId(albumArtistBySongDao.getSongId());
-        songBo.setSongName(albumArtistBySongDao.getSongName());
-        songBo.setAlbumId(albumArtistBySongDao.getAlbumId());
-        songBo.setAlbumName(albumArtistBySongDao.getAlbumName());
-        songBo.setArtistId(albumArtistBySongDao.getArtistId());
-        songBo.setArtistName(albumArtistBySongDao.getArtistName());
-        songBo.setDuration(albumArtistBySongDao.getSongDuration());
-        songBo.setYear(albumArtistBySongDao.getAlbumYear());
+        songBo.setSongId(albumArtistBySongDto.getSongId());
+        songBo.setSongName(albumArtistBySongDto.getSongName());
+        songBo.setAlbumId(albumArtistBySongDto.getAlbumId());
+        songBo.setAlbumName(albumArtistBySongDto.getAlbumName());
+        songBo.setArtistId(albumArtistBySongDto.getArtistId());
+        songBo.setArtistName(albumArtistBySongDto.getArtistName());
+        songBo.setDuration(albumArtistBySongDto.getSongDuration());
+        songBo.setYear(albumArtistBySongDto.getAlbumYear());
 
-        if ( albumArtistBySongDao.getArtistGenres() != null && albumArtistBySongDao.getArtistGenres().size() > 0 ) {
-            songBo.setGenre(albumArtistBySongDao.getArtistGenres().iterator().next());
+        if ( albumArtistBySongDto.getArtistGenres() != null && albumArtistBySongDto.getArtistGenres().size() > 0 ) {
+            songBo.setGenre(albumArtistBySongDto.getArtistGenres().iterator().next());
         }
 
         return Optional.of(songBo);

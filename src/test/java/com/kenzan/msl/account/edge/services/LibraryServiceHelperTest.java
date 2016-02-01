@@ -7,9 +7,9 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
 import com.kenzan.msl.account.edge.TestConstants;
-import com.kenzan.msl.catalog.client.dao.AlbumArtistBySongDao;
-import com.kenzan.msl.catalog.client.dao.SongsAlbumsByArtistDao;
-import com.kenzan.msl.catalog.client.dao.SongsArtistByAlbumDao;
+import com.kenzan.msl.catalog.client.dto.AlbumArtistBySongDto;
+import com.kenzan.msl.catalog.client.dto.SongsAlbumsByArtistDto;
+import com.kenzan.msl.catalog.client.dto.SongsArtistByAlbumDto;
 import com.kenzan.msl.catalog.client.services.CassandraCatalogService;
 import com.kenzan.msl.common.bo.AlbumBo;
 import com.kenzan.msl.common.bo.ArtistBo;
@@ -70,14 +70,14 @@ public class LibraryServiceHelperTest {
 
     @Test
     public void testGetArtist() {
-        Result<SongsAlbumsByArtistDao> songsAlbumsByArtistDaoResult = PowerMockito.mock(Result.class);
-        PowerMockito.when(songsAlbumsByArtistDaoResult.one()).thenReturn(tc.songsAlbumsByArtistDao);
+        Result<SongsAlbumsByArtistDto> songsAlbumsByArtistDtoResult = PowerMockito.mock(Result.class);
+        PowerMockito.when(songsAlbumsByArtistDtoResult.one()).thenReturn(tc.songsAlbumsByArtistDto);
 
         expect(cassandraCatalogService.getSongsAlbumsByArtist(tc.ARTIST_UUID, Optional.absent()))
             .andReturn(observableResultSet);
 
         expect(cassandraCatalogService.mapSongsAlbumsByArtist(observableResultSet))
-            .andReturn(Observable.just(songsAlbumsByArtistDaoResult));
+            .andReturn(Observable.just(songsAlbumsByArtistDtoResult));
 
         replay(cassandraCatalogService);
         PowerMock.replayAll();
@@ -86,8 +86,8 @@ public class LibraryServiceHelperTest {
 
         Optional<ArtistBo> result = lsh.getArtist(tc.ARTIST_UUID);
         assertNotNull(result.get());
-        assertEquals(result.get().getArtistId(), tc.songsAlbumsByArtistDao.getArtistId());
-        assertEquals(result.get().getArtistName(), tc.songsAlbumsByArtistDao.getArtistName());
+        assertEquals(result.get().getArtistId(), tc.songsAlbumsByArtistDto.getArtistId());
+        assertEquals(result.get().getArtistName(), tc.songsAlbumsByArtistDto.getArtistName());
         assertEquals(result.get().getGenre(), tc.GENRE);
     }
 
@@ -109,14 +109,14 @@ public class LibraryServiceHelperTest {
 
     @Test
     public void testGetAlbum() {
-        Result<SongsArtistByAlbumDao> songsArtistByAlbumDaoResult = PowerMockito.mock(Result.class);
-        PowerMockito.when(songsArtistByAlbumDaoResult.one()).thenReturn(tc.songsArtistByAlbumDao);
+        Result<SongsArtistByAlbumDto> songsArtistByAlbumDtoResult = PowerMockito.mock(Result.class);
+        PowerMockito.when(songsArtistByAlbumDtoResult.one()).thenReturn(tc.songsArtistByAlbumDto);
 
         expect(cassandraCatalogService.getSongsArtistByAlbum(tc.ALBUM_UUID, Optional.absent()))
             .andReturn(observableResultSet);
 
         expect(cassandraCatalogService.mapSongsArtistByAlbum(observableResultSet))
-            .andReturn(Observable.just(songsArtistByAlbumDaoResult));
+            .andReturn(Observable.just(songsArtistByAlbumDtoResult));
 
         replay(cassandraCatalogService);
         PowerMock.replayAll();
@@ -125,11 +125,11 @@ public class LibraryServiceHelperTest {
 
         Optional<AlbumBo> result = lsh.getAlbum(tc.ALBUM_UUID);
         assertNotNull(result.get());
-        assertEquals(result.get().getAlbumId(), tc.songsArtistByAlbumDao.getAlbumId());
-        assertEquals(result.get().getAlbumName(), tc.songsArtistByAlbumDao.getAlbumName());
-        assertEquals(result.get().getArtistId(), tc.songsArtistByAlbumDao.getArtistId());
-        assertEquals(result.get().getArtistName(), tc.songsArtistByAlbumDao.getArtistName());
-        assertEquals(result.get().getImageLink(), tc.songsArtistByAlbumDao.getImageLink());
+        assertEquals(result.get().getAlbumId(), tc.songsArtistByAlbumDto.getAlbumId());
+        assertEquals(result.get().getAlbumName(), tc.songsArtistByAlbumDto.getAlbumName());
+        assertEquals(result.get().getArtistId(), tc.songsArtistByAlbumDto.getArtistId());
+        assertEquals(result.get().getArtistName(), tc.songsArtistByAlbumDto.getArtistName());
+        assertEquals(result.get().getImageLink(), tc.songsArtistByAlbumDto.getImageLink());
         assertEquals(result.get().getGenre(), tc.GENRE);
     }
 
@@ -151,14 +151,14 @@ public class LibraryServiceHelperTest {
 
     @Test
     public void testGetSong() {
-        Result<AlbumArtistBySongDao> albumArtistBySongDaoResult = PowerMockito.mock(Result.class);
-        PowerMockito.when(albumArtistBySongDaoResult.one()).thenReturn(tc.albumArtistBySongDao);
+        Result<AlbumArtistBySongDto> albumArtistBySongDtoResult = PowerMockito.mock(Result.class);
+        PowerMockito.when(albumArtistBySongDtoResult.one()).thenReturn(tc.albumArtistBySongDto);
 
         expect(cassandraCatalogService.getAlbumArtistBySong(tc.SONG_UUID, Optional.absent()))
             .andReturn(observableResultSet);
 
         expect(cassandraCatalogService.mapAlbumArtistBySong(observableResultSet))
-            .andReturn(Observable.just(albumArtistBySongDaoResult));
+            .andReturn(Observable.just(albumArtistBySongDtoResult));
 
         replay(cassandraCatalogService);
         PowerMock.replayAll();
@@ -168,13 +168,13 @@ public class LibraryServiceHelperTest {
         Optional<SongBo> result = lsh.getSong(tc.SONG_UUID);
         assertNotNull(result.get());
 
-        assertEquals(result.get().getSongId(), tc.albumArtistBySongDao.getSongId());
-        assertEquals(result.get().getSongName(), tc.albumArtistBySongDao.getSongName());
-        assertEquals(result.get().getAlbumId(), tc.albumArtistBySongDao.getAlbumId());
-        assertEquals(result.get().getAlbumName(), tc.albumArtistBySongDao.getAlbumName());
-        assertEquals(result.get().getArtistId(), tc.albumArtistBySongDao.getArtistId());
-        assertEquals(result.get().getArtistName(), tc.albumArtistBySongDao.getArtistName());
-        assertEquals(result.get().getDuration(), tc.albumArtistBySongDao.getSongDuration());
+        assertEquals(result.get().getSongId(), tc.albumArtistBySongDto.getSongId());
+        assertEquals(result.get().getSongName(), tc.albumArtistBySongDto.getSongName());
+        assertEquals(result.get().getAlbumId(), tc.albumArtistBySongDto.getAlbumId());
+        assertEquals(result.get().getAlbumName(), tc.albumArtistBySongDto.getAlbumName());
+        assertEquals(result.get().getArtistId(), tc.albumArtistBySongDto.getArtistId());
+        assertEquals(result.get().getArtistName(), tc.albumArtistBySongDto.getArtistName());
+        assertEquals(result.get().getDuration(), tc.albumArtistBySongDto.getSongDuration());
         assertEquals(result.get().getGenre(), tc.GENRE);
     }
 }

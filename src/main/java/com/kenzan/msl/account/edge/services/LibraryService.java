@@ -6,9 +6,9 @@ package com.kenzan.msl.account.edge.services;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
-import com.kenzan.msl.account.client.dao.AlbumsByUserDao;
-import com.kenzan.msl.account.client.dao.ArtistsByUserDao;
-import com.kenzan.msl.account.client.dao.SongsByUserDao;
+import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
+import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
+import com.kenzan.msl.account.client.dto.SongsByUserDto;
 import com.kenzan.msl.account.client.services.CassandraAccountService;
 import com.kenzan.msl.account.edge.translate.Translators;
 import com.kenzan.msl.common.bo.AbstractBo;
@@ -75,9 +75,9 @@ public class LibraryService extends LibraryServiceHelper {
 
                 if ( optArtistBo.isPresent() && !isInLibrary(optArtistBo.get(), myLibrary) ) {
                     try {
-                        ArtistsByUserDao optArtistDao = Translators.translate(optArtistBo.get());
-                        optArtistDao.setUserId(UUID.fromString(sessionToken));
-                        cassandraAccountService.addOrUpdateArtistsByUser(optArtistDao);
+                        ArtistsByUserDto optArtistDto = Translators.translate(optArtistBo.get());
+                        optArtistDto.setUserId(UUID.fromString(sessionToken));
+                        cassandraAccountService.addOrUpdateArtistsByUser(optArtistDto);
                     }
                     catch ( Exception error ) {
                         throw error;
@@ -92,9 +92,9 @@ public class LibraryService extends LibraryServiceHelper {
 
                 if ( optAlbumBo.isPresent() && !isInLibrary(optAlbumBo.get(), myLibrary) ) {
                     try {
-                        AlbumsByUserDao optAlbumDao = Translators.translate(optAlbumBo.get());
-                        optAlbumDao.setUserId(UUID.fromString(sessionToken));
-                        cassandraAccountService.addOrUpdateAlbumsByUser(optAlbumDao);
+                        AlbumsByUserDto optAlbumDto = Translators.translate(optAlbumBo.get());
+                        optAlbumDto.setUserId(UUID.fromString(sessionToken));
+                        cassandraAccountService.addOrUpdateAlbumsByUser(optAlbumDto);
                     }
                     catch ( Exception error ) {
                         throw error;
@@ -109,9 +109,9 @@ public class LibraryService extends LibraryServiceHelper {
 
                 if ( optSongBo.isPresent() && !isInLibrary(optSongBo.get(), myLibrary) ) {
                     try {
-                        SongsByUserDao optSongDao = Translators.translate(optSongBo.get());
-                        optSongDao.setUserId(UUID.fromString(sessionToken));
-                        cassandraAccountService.addOrUpdateSongsByUser(optSongDao);
+                        SongsByUserDto optSongDto = Translators.translate(optSongBo.get());
+                        optSongDto.setUserId(UUID.fromString(sessionToken));
+                        cassandraAccountService.addOrUpdateSongsByUser(optSongDto);
                     }
                     catch ( Exception error ) {
                         throw error;
@@ -194,9 +194,9 @@ public class LibraryService extends LibraryServiceHelper {
         Observable<ResultSet> results = cassandraAccountService.getAlbumsByUser(UUID.fromString(uuid),
                                                                                 Optional.absent(), Optional.absent());
 
-        Result<AlbumsByUserDao> mappedResults = cassandraAccountService.mapAlbumsByUser(results).toBlocking().first();
+        Result<AlbumsByUserDto> mappedResults = cassandraAccountService.mapAlbumsByUser(results).toBlocking().first();
 
-        return Translators.translateAlbumsByUserDao(mappedResults);
+        return Translators.translateAlbumsByUserDto(mappedResults);
     }
 
     /**
@@ -212,9 +212,9 @@ public class LibraryService extends LibraryServiceHelper {
         Observable<ResultSet> results = cassandraAccountService.getArtistsByUser(UUID.fromString(uuid),
                                                                                  Optional.absent(), Optional.absent());
 
-        Result<ArtistsByUserDao> mappedResults = cassandraAccountService.mapArtistByUser(results).toBlocking().first();
+        Result<ArtistsByUserDto> mappedResults = cassandraAccountService.mapArtistByUser(results).toBlocking().first();
 
-        return Translators.translateArtistByUserDao(mappedResults);
+        return Translators.translateArtistByUserDto(mappedResults);
     }
 
     /**
@@ -229,9 +229,9 @@ public class LibraryService extends LibraryServiceHelper {
         Observable<ResultSet> results = cassandraAccountService.getSongsByUser(UUID.fromString(uuid),
                                                                                Optional.absent(), Optional.absent());
 
-        Result<SongsByUserDao> mappedResults = cassandraAccountService.mapSongsByUser(results).toBlocking().first();
+        Result<SongsByUserDto> mappedResults = cassandraAccountService.mapSongsByUser(results).toBlocking().first();
 
-        return Translators.translateSongsByUserDao(mappedResults);
+        return Translators.translateSongsByUserDto(mappedResults);
     }
 
     /**
