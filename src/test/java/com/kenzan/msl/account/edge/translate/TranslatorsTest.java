@@ -5,9 +5,9 @@ package com.kenzan.msl.account.edge.translate;
 
 import static org.junit.Assert.*;
 
-import com.kenzan.msl.account.client.dao.AlbumsByUserDao;
-import com.kenzan.msl.account.client.dao.ArtistsByUserDao;
-import com.kenzan.msl.account.client.dao.SongsByUserDao;
+import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
+import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
+import com.kenzan.msl.account.client.dto.SongsByUserDto;
 import com.kenzan.msl.account.edge.TestConstants;
 import com.kenzan.msl.common.bo.*;
 
@@ -30,10 +30,10 @@ public class TranslatorsTest {
      */
 
     @Test
-    public void testTranslateAlbumBoToAlbumsByUserDao_HappyPath() {
+    public void testTranslateAlbumBoToAlbumsByUserDto_HappyPath() {
         initAlbumBo();
 
-        AlbumsByUserDao model = Translators.translate(albumBo);
+        AlbumsByUserDto model = Translators.translate(albumBo);
 
         assertNotNull(model);
         assertEquals(model.getAlbumId(), tc.ALBUM_UUID);
@@ -47,10 +47,10 @@ public class TranslatorsTest {
     }
 
     @Test
-    public void testTranslateAlbumBoToAlbumsByUserDao_EverythingEmpty() {
+    public void testTranslateAlbumBoToAlbumsByUserDto_EverythingEmpty() {
         AlbumBo bo = new AlbumBo();
 
-        AlbumsByUserDao model = Translators.translate(bo);
+        AlbumsByUserDto model = Translators.translate(bo);
 
         assertNotNull(model);
         assertNull(model.getAlbumId());
@@ -69,10 +69,10 @@ public class TranslatorsTest {
      */
 
     @Test
-    public void testTranslateArtistBoToArtistsByUserDao_HappyPath() {
+    public void testTranslateArtistBoToArtistsByUserDto_HappyPath() {
         initArtistBo();
 
-        ArtistsByUserDao model = Translators.translate(artistBo);
+        ArtistsByUserDto model = Translators.translate(artistBo);
 
         assertNotNull(model);
         assertEquals(model.getArtistId(), tc.ARTIST_UUID);
@@ -83,10 +83,10 @@ public class TranslatorsTest {
     }
 
     @Test
-    public void testTranslateArtistBoToArtistsByUserDao_EverythingEmpty() {
+    public void testTranslateArtistBoToArtistsByUserDto_EverythingEmpty() {
         ArtistBo bo = new ArtistBo();
 
-        ArtistsByUserDao model = Translators.translate(bo);
+        ArtistsByUserDto model = Translators.translate(bo);
 
         assertNotNull(model);
         assertNull(model.getArtistId());
@@ -102,10 +102,10 @@ public class TranslatorsTest {
      */
 
     @Test
-    public void testTranslateSongBoToSongsByUserDao_HappyPath() {
+    public void testTranslateSongBoToSongsByUserDto_HappyPath() {
         initSongBo();
 
-        SongsByUserDao model = Translators.translate(songBo);
+        SongsByUserDto model = Translators.translate(songBo);
 
         assertNotNull(model);
 
@@ -125,10 +125,10 @@ public class TranslatorsTest {
     }
 
     @Test
-    public void testTranslateSongBoToSongsByUserDao_EverythingEmpty() {
+    public void testTranslateSongBoToSongsByUserDto_EverythingEmpty() {
         SongBo bo = new SongBo();
 
-        SongsByUserDao model = Translators.translate(bo);
+        SongsByUserDto model = Translators.translate(bo);
 
         assertNotNull(model);
         assertNull(model.getSongId());

@@ -5,7 +5,7 @@ package com.kenzan.msl.account.edge.translate;
 
 import com.kenzan.msl.account.client.translate.AccountClientTranslators;
 
-import com.kenzan.msl.account.client.dao.*;
+import com.kenzan.msl.account.client.dto.*;
 import com.kenzan.msl.common.bo.AlbumBo;
 import com.kenzan.msl.common.bo.ArtistBo;
 import com.kenzan.msl.common.bo.SongBo;
@@ -18,8 +18,8 @@ public class Translators extends AccountClientTranslators {
     // ALBUMS
     // ==========================================================================================================
 
-    public static AlbumsByUserDao translate(AlbumBo album) {
-        AlbumsByUserDao model = new AlbumsByUserDao();
+    public static AlbumsByUserDto translate(AlbumBo album) {
+        AlbumsByUserDto model = new AlbumsByUserDto();
         model.setAlbumId(album.getAlbumId());
         model.setAlbumName(album.getAlbumName());
         model.setAlbumYear(album.getYear());
@@ -37,8 +37,8 @@ public class Translators extends AccountClientTranslators {
     // ARTISTS
     // =========================================================================================================
 
-    public static ArtistsByUserDao translate(ArtistBo artist) {
-        ArtistsByUserDao model = new ArtistsByUserDao();
+    public static ArtistsByUserDto translate(ArtistBo artist) {
+        ArtistsByUserDto model = new ArtistsByUserDto();
         model.setArtistId(artist.getArtistId());
         model.setArtistMbid(artist.getArtistMbid());
         model.setArtistName(artist.getArtistName());
@@ -53,8 +53,8 @@ public class Translators extends AccountClientTranslators {
     // SONGS
     // ===========================================================================================================
 
-    public static SongsByUserDao translate(SongBo song) {
-        SongsByUserDao model = new SongsByUserDao();
+    public static SongsByUserDto translate(SongBo song) {
+        SongsByUserDto model = new SongsByUserDto();
         model.setArtistId(song.getArtistId());
         model.setArtistMbid(song.getArtistMbid());
         model.setArtistName(song.getArtistName());
