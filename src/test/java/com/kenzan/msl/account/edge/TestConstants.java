@@ -13,7 +13,12 @@ import io.swagger.model.AlbumInfo;
 import io.swagger.model.ArtistInfo;
 import io.swagger.model.SongInfo;
 
-import java.util.*;
+import java.util.UUID;
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 public class TestConstants {
 
