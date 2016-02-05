@@ -3,13 +3,17 @@
  */
 package com.kenzan.msl.account.edge.translate;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
 import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
 import com.kenzan.msl.account.client.dto.SongsByUserDto;
 import com.kenzan.msl.account.edge.TestConstants;
-import com.kenzan.msl.common.bo.*;
+import com.kenzan.msl.common.bo.AlbumBo;
+import com.kenzan.msl.common.bo.ArtistBo;
+import com.kenzan.msl.common.bo.SongBo;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -5,7 +5,9 @@ package com.kenzan.msl.account.edge.translate;
 
 import com.kenzan.msl.account.client.translate.AccountClientTranslators;
 
-import com.kenzan.msl.account.client.dto.*;
+import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
+import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
+import com.kenzan.msl.account.client.dto.SongsByUserDto;
 import com.kenzan.msl.common.bo.AlbumBo;
 import com.kenzan.msl.common.bo.ArtistBo;
 import com.kenzan.msl.common.bo.SongBo;
