@@ -4,7 +4,7 @@
     <groupId>msl.server</groupId>
     <artifactId>msl-account-edge</artifactId>
     <packaging>jar</packaging>
-    <version>${msl-server.version}</version>
+    <version>1.0.0</version>
 
     <profiles>
         <profile>
@@ -594,12 +594,6 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
             <version>${powermock.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jackson2-provider</artifactId>
-            <version>${org-jboss-resteasy.version}</version>
         </dependency>
 
         <dependency>
