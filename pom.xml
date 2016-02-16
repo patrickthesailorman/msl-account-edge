@@ -140,6 +140,15 @@
                     </plugin>
                 </plugins>
             </build>
+
+            <dependencies>
+                <dependency>
+                    <groupId>com.owlike</groupId>
+                    <artifactId>genson</artifactId>
+                    <version>0.99</version>
+                </dependency>
+            </dependencies>
+
         </profile>
 
     </profiles>
@@ -425,12 +434,6 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.owlike</groupId>
-            <artifactId>genson</artifactId>
-            <version>0.99</version>
         </dependency>
 
         <!-- API -->
