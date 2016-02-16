@@ -1,6 +1,7 @@
-package io.swagger.api.impl;
+package com.kenzan.msl.account.edge;
 
 import io.swagger.api.AccountEdgeApi;
+import io.swagger.api.impl.AccountEdgeApiOriginFilter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;

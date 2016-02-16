@@ -277,7 +277,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>io.swagger.api.impl.Main</mainClass>
+                            <mainClass>com.kenzan.msl.account.edge.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
