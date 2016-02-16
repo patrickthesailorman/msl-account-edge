@@ -3,6 +3,7 @@
  */
 package com.kenzan.msl.account.edge.services;
 
+import com.google.common.base.Optional;
 import com.kenzan.msl.account.edge.TestConstants;
 import com.kenzan.msl.ratings.client.services.CassandraRatingsService;
 
@@ -43,10 +44,10 @@ public class RatingsHelperTest {
     @Test
     public void testProcessAlbumRatings() {
         expect(cassandraRatingsService.getAverageRating(tc.ALBUM_UUID, "Album"))
-            .andReturn(Observable.just(tc.AVERAGE_RATINGS_DTO));
+            .andReturn(Observable.just(Optional.of(tc.AVERAGE_RATINGS_DTO)));
 
         expect(cassandraRatingsService.getUserRating(tc.USER_ID, "Album", tc.ALBUM_UUID))
-            .andReturn(Observable.just(tc.USER_RATINGS_DTO));
+            .andReturn(Observable.just(Optional.of(tc.USER_RATINGS_DTO)));
 
         replay(cassandraRatingsService);
         PowerMock.replayAll();
@@ -65,10 +66,10 @@ public class RatingsHelperTest {
     public void testProcessArtistRatings()
         throws Exception {
         expect(cassandraRatingsService.getAverageRating(tc.ARTIST_UUID, "Artist"))
-            .andReturn(Observable.just(tc.AVERAGE_RATINGS_DTO));
+            .andReturn(Observable.just(Optional.of(tc.AVERAGE_RATINGS_DTO)));
 
         expect(cassandraRatingsService.getUserRating(tc.USER_ID, "Artist", tc.ARTIST_UUID))
-            .andReturn(Observable.just(tc.USER_RATINGS_DTO));
+            .andReturn(Observable.just(Optional.of(tc.USER_RATINGS_DTO)));
 
         replay(cassandraRatingsService);
         PowerMock.replayAll();
@@ -87,10 +88,10 @@ public class RatingsHelperTest {
     public void testProcessSongRatings()
         throws Exception {
         expect(cassandraRatingsService.getAverageRating(tc.SONG_UUID, "Song"))
-            .andReturn(Observable.just(tc.AVERAGE_RATINGS_DTO));
+            .andReturn(Observable.just(Optional.of(tc.AVERAGE_RATINGS_DTO)));
 
         expect(cassandraRatingsService.getUserRating(tc.USER_ID, "Song", tc.SONG_UUID))
-            .andReturn(Observable.just(tc.USER_RATINGS_DTO));
+            .andReturn(Observable.just(Optional.of(tc.USER_RATINGS_DTO)));
 
         replay(cassandraRatingsService);
         PowerMock.replayAll();
