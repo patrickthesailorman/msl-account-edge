@@ -1,3 +1,6 @@
+/*
+ * Copyright 2015, Kenzan, All rights reserved.
+ */
 package io.swagger.client;
 
 import com.netflix.config.DynamicPropertyFactory;

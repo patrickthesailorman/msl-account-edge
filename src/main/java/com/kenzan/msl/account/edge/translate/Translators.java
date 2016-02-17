@@ -16,10 +16,12 @@ import java.util.Date;
 
 public class Translators extends AccountClientTranslators {
 
-    // ==========================================================================================================
-    // ALBUMS
-    // ==========================================================================================================
-
+    /**
+     * Translates AlbumBo to AlbumsDto
+     *
+     * @param album AlbumBo
+     * @return AlbumsDto
+     */
     public static AlbumsByUserDto translate(AlbumBo album) {
         AlbumsByUserDto model = new AlbumsByUserDto();
         model.setAlbumId(album.getAlbumId());
@@ -35,10 +37,12 @@ public class Translators extends AccountClientTranslators {
         return model;
     }
 
-    // =========================================================================================================
-    // ARTISTS
-    // =========================================================================================================
-
+    /**
+     * Translates ArtistBo to ArtistsDto
+     *
+     * @param artist ArtistBo
+     * @return ArtistsDto
+     */
     public static ArtistsByUserDto translate(ArtistBo artist) {
         ArtistsByUserDto model = new ArtistsByUserDto();
         model.setArtistId(artist.getArtistId());
@@ -51,10 +55,12 @@ public class Translators extends AccountClientTranslators {
         return model;
     }
 
-    // ===========================================================================================================
-    // SONGS
-    // ===========================================================================================================
-
+    /**
+     * Translates SongBo to SongsDto
+     *
+     * @param song SongBo
+     * @return SongsDto
+     */
     public static SongsByUserDto translate(SongBo song) {
         SongsByUserDto model = new SongsByUserDto();
         model.setArtistId(song.getArtistId());
