@@ -188,7 +188,7 @@ public class LibraryService extends LibraryServiceHelper {
      *
      * @param cassandraAccountService com.kenzan.msl.server.services.CassandraAccountService
      * @param uuid authenticated user uuid
-     * @return List<AlbumInfo>
+     * @return List&lt;AlbumInfo&gt;
      */
     private List<AlbumInfo> getMyLibraryAlbums(final CassandraAccountService cassandraAccountService, final String uuid) {
         Observable<ResultSet> results = cassandraAccountService.getAlbumsByUser(UUID.fromString(uuid),
@@ -204,7 +204,7 @@ public class LibraryService extends LibraryServiceHelper {
      *
      * @param cassandraAccountService com.kenzan.msl.server.services.CassandraAccountService
      * @param uuid uuid of authenticated user
-     * @return List<ArtistInfo>
+     * @return List&lt;ArtistInfo&gt;
      */
     private List<ArtistInfo> getMyLibraryArtists(final CassandraAccountService cassandraAccountService,
                                                  final String uuid) {
@@ -222,7 +222,7 @@ public class LibraryService extends LibraryServiceHelper {
      *
      * @param cassandraAccountService com.kenzan.msl.server.services.CassandraAccountService
      * @param uuid authenticated user uuid
-     * @return List<SongInfo>
+     * @return List&lt;SongInfo&gt;
      */
     private List<SongInfo> getMyLibrarySongs(final CassandraAccountService cassandraAccountService, final String uuid) {
 

@@ -25,7 +25,7 @@ public class AccountEdgeService
      * Retrieves the user library data
      *
      * @param sessionToken user uuid
-     * @return Observable<MyLibrary>
+     * @return Observable&lt;MyLibrary&gt;
      */
     public Observable<MyLibrary> getMyLibrary(String sessionToken) {
         return Observable.just(libraryService.get(cassandraAccountService, sessionToken));

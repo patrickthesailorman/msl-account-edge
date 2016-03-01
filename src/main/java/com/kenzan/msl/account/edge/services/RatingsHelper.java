@@ -28,7 +28,7 @@ public class RatingsHelper {
     /**
      * Adds average and user ratings to a list of AlbumInfo objects
      *
-     * @param albumList List<AlbumInfo>
+     * @param albumList List&lt;AlbumInfo&gt;
      * @param userUuid java.util.UUID
      */
     public void processAlbumRatings(List<AlbumInfo> albumList, UUID userUuid) {
@@ -54,7 +54,7 @@ public class RatingsHelper {
     /**
      * Adds average and user ratings to a list of ArtistInfo objects
      *
-     * @param artistList List<ArtistInfo>
+     * @param artistList List&lt;ArtistInfo&gt;
      * @param userUuid java.util.UUID
      */
     public void processArtistRatings(List<ArtistInfo> artistList, UUID userUuid) {
@@ -80,7 +80,7 @@ public class RatingsHelper {
     /**
      * Adds average and user rating data on a list of SongInfo objects
      *
-     * @param songList List<SongInfo>
+     * @param songList List&lt;SongInfo&gt;
      * @param userUuid java.util.UUID
      */
     public void processSongRatings(List<SongInfo> songList, UUID userUuid) {

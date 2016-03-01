@@ -23,7 +23,7 @@ public class LibraryServiceHelper {
      * Retrieves a specific artist from teh songs_albums_by_artist cassandra table
      *
      * @param artistId java.util.UUID
-     * @return Optional<ArtistBo>
+     * @return Optional&lt;ArtistBo&gt;
      */
     public Optional<ArtistBo> getArtist(final UUID artistId) {
         CassandraCatalogService cassandraCatalogService = CassandraCatalogService.getInstance();
@@ -60,7 +60,7 @@ public class LibraryServiceHelper {
      * Retrieves a specific album from the songs_artist_by_album cassandra table
      *
      * @param albumId java.util.UUID
-     * @return Optional<AlbumBo>
+     * @return Optional&lt;AlbumBo&gt;
      */
     public Optional<AlbumBo> getAlbum(final UUID albumId) {
         CassandraCatalogService cassandraCatalogService = CassandraCatalogService.getInstance();
@@ -95,7 +95,7 @@ public class LibraryServiceHelper {
      * Retrieves a specific album from the songs_artist_by_album cassandra table
      *
      * @param songId java.util.UUID
-     * @return Optional<SongBo>
+     * @return Optional&lt;SongBo&gt;
      */
     public Optional<SongBo> getSong(final UUID songId) {
         CassandraCatalogService cassandraCatalogService = CassandraCatalogService.getInstance();
