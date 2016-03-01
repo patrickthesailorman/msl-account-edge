@@ -3,9 +3,12 @@
  */
 package com.kenzan.msl.account.edge.services;
 
+import com.kenzan.msl.account.client.dto.UserDto;
 import com.kenzan.msl.account.client.services.CassandraAccountService;
 import io.swagger.model.MyLibrary;
 import rx.Observable;
+
+import java.util.UUID;
 
 /**
  * Implementation of the AccountEdge interface that retrieves its data from a Cassandra cluster.
@@ -21,10 +24,35 @@ public class AccountEdgeService implements AccountEdge {
   }
 
   /**
+   * Registers a user
+   *
+   * @param user UserDto
+   * @return Observable&lt;Void&gt;
+   */
+  public Observable<Void> registerUser(UserDto user) {
+    Observable<UserDto> userResults = cassandraAccountService.getUserByUsername(user.getUsername());
+    if (!userResults.isEmpty().toBlocking().first()) {
+      throw new RuntimeException("User already exists with designated email address");
+    } else {
+      boolean isValidUUID = false;
+      while (!isValidUUID) {
+        isValidUUID =
+            cassandraAccountService.getUserByUUID(user.getUserId()).isEmpty().toBlocking().first();
+      }
+      cassandraAccountService.addOrUpdateUser(user);
+      if (cassandraAccountService.getUserByUsername(user.getUsername()).isEmpty().toBlocking()
+          .first()) {
+        throw new RuntimeException("Unable to create user");
+      }
+    }
+    return Observable.empty();
+  }
+
+  /**
    * Retrieves the user library data
    *
    * @param sessionToken user uuid
-   * @return Observable&lt;MyLibrary&gt;
+   * @return Observable<MyLibrary>
    */
   public Observable<MyLibrary> getMyLibrary(String sessionToken) {
     return Observable.just(libraryService.get(cassandraAccountService, sessionToken));

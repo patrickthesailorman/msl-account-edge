@@ -30,7 +30,7 @@ public class Main {
    * Runs jetty server to expose jersey API
    * 
    * @param args String array
-   * @throws Exception if server doesn't start
+   * @throws Exception
    */
   public static void main(String[] args) throws Exception {
 

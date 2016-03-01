@@ -23,7 +23,7 @@ public class LibraryClient {
 
   /**
    * Retrieve the current user's library
-   *
+   * 
    * @param sessionToken String
    * @return AccountEdgeApiResponseMessage
    */
@@ -44,7 +44,7 @@ public class LibraryClient {
 
   /**
    * Attach a song to current user's library
-   *
+   * 
    * @param songId String
    * @param sessionToken String
    * @return AccountEdgeApiResponseMessage
@@ -67,7 +67,7 @@ public class LibraryClient {
 
   /**
    * Remove song from current user's library
-   *
+   * 
    * @param songId String
    * @param timestamp String
    * @param sessionToken String
@@ -91,7 +91,7 @@ public class LibraryClient {
 
   /**
    * Attach an album to current user's library
-   *
+   * 
    * @param albumId String
    * @param sessionToken String
    * @return AccountEdgeApiResponseMessage
@@ -114,7 +114,7 @@ public class LibraryClient {
 
   /**
    * Remove album from current user's library
-   *
+   * 
    * @param albumId String
    * @param timestamp String
    * @param sessionToken String
@@ -138,7 +138,7 @@ public class LibraryClient {
 
   /**
    * Attach an artist to current user's library
-   *
+   * 
    * @param artistId String
    * @param sessionToken String
    * @return AccountEdgeApiResponseMessage
@@ -161,7 +161,7 @@ public class LibraryClient {
 
   /**
    * Remove artist from current user's library
-   *
+   * 
    * @param artistId String
    * @param timestamp String
    * @param sessionToken String
