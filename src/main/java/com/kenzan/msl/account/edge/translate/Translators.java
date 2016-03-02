@@ -18,7 +18,7 @@ public class Translators extends AccountClientTranslators {
 
   /**
    * Translates AlbumBo to AlbumsDto
-   *
+   * 
    * @param album AlbumBo
    * @return AlbumsDto
    */
@@ -39,7 +39,7 @@ public class Translators extends AccountClientTranslators {
 
   /**
    * Translates ArtistBo to ArtistsDto
-   *
+   * 
    * @param artist ArtistBo
    * @return ArtistsDto
    */
@@ -57,7 +57,7 @@ public class Translators extends AccountClientTranslators {
 
   /**
    * Translates SongBo to SongsDto
-   *
+   * 
    * @param song SongBo
    * @return SongsDto
    */

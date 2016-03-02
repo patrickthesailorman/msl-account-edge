@@ -1,5 +1,6 @@
 package io.swagger.api.impl;
 
+import com.kenzan.msl.account.client.dto.UserDto;
 import com.kenzan.msl.account.edge.services.AccountEdgeService;
 import com.kenzan.msl.account.edge.services.LibraryService;
 import io.swagger.api.*;
@@ -12,6 +13,8 @@ import io.swagger.api.NotFoundException;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.ws.rs.core.Response;
+import java.util.Date;
+import java.util.UUID;
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JaxRSServerCodegen", date = "2016-01-25T12:48:02.255-06:00")
 public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
@@ -185,8 +188,26 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
     @Override
     public Response registration(String email, String password, String passwordConfirmation)
             throws NotFoundException {
-        // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+        if (!password.equals(passwordConfirmation)) {
+            ErrorResponse errorResponse = new ErrorResponse();
+            errorResponse.setMessage("Server error: password mismatch");
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorResponse).build();
+        }
+        try {
+            UserDto newUser = new UserDto();
+            newUser.setPassword(password);
+            newUser.setUsername(email);
+            newUser.setCreationTimestamp(new Date());
+            newUser.setUserId(UUID.randomUUID());
+            accountService.registerUser(newUser);
+            return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success")).build();
+        }
+        catch (RuntimeException e) {
+            e.printStackTrace();
+            ErrorResponse errorResponse = new ErrorResponse();
+            errorResponse.setMessage("Server error: " + e.getCause().getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorResponse).build();
+        }
     }
   
 }
