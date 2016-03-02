@@ -13,93 +13,106 @@ import java.util.UUID;
 
 public class RatingsHelper {
 
-    private static RatingsHelper instance = null;
+  private static RatingsHelper instance = null;
 
-    private RatingsHelper() {
+  private RatingsHelper() {}
+
+  public static RatingsHelper getInstance() {
+    if (instance == null) {
+      instance = new RatingsHelper();
     }
+    return instance;
+  }
 
-    public static RatingsHelper getInstance() {
-        if ( instance == null ) {
-            instance = new RatingsHelper();
-        }
-        return instance;
+  /**
+   * Adds average and user ratings to a list of AlbumInfo objects
+   *
+   * @param albumList List&lt;AlbumInfo&gt;
+   * @param userUuid java.util.UUID
+   */
+  public void processAlbumRatings(List<AlbumInfo> albumList, UUID userUuid) {
+    CassandraRatingsService cassandraRatingsService = CassandraRatingsService.getInstance();
+    for (AlbumInfo albumInfo : albumList) {
+      Optional<AverageRatingsDto> averageRatingsDto =
+          cassandraRatingsService
+              .getAverageRating(UUID.fromString(albumInfo.getAlbumId()), "Album").toBlocking()
+              .first();
+
+      if (averageRatingsDto.isPresent()) {
+        long average =
+            averageRatingsDto.get().getNumRating() / averageRatingsDto.get().getSumRating();
+        albumInfo.setAverageRating((int) average);
+      }
+
+      Optional<UserRatingsDto> userRatingsDto =
+          cassandraRatingsService
+              .getUserRating(userUuid, "Album", UUID.fromString(albumInfo.getAlbumId()))
+              .toBlocking().first();
+      if (userRatingsDto.isPresent()) {
+        albumInfo.setPersonalRating(userRatingsDto.get().getRating());
+      }
+
     }
+  }
 
-    /**
-     * Adds average and user ratings to a list of AlbumInfo objects
-     *
-     * @param albumList List&lt;AlbumInfo&gt;
-     * @param userUuid java.util.UUID
-     */
-    public void processAlbumRatings(List<AlbumInfo> albumList, UUID userUuid) {
-        CassandraRatingsService cassandraRatingsService = CassandraRatingsService.getInstance();
-        for ( AlbumInfo albumInfo : albumList ) {
-            Optional<AverageRatingsDto> averageRatingsDto = cassandraRatingsService
-                .getAverageRating(UUID.fromString(albumInfo.getAlbumId()), "Album").toBlocking().first();
+  /**
+   * Adds average and user ratings to a list of ArtistInfo objects
+   *
+   * @param artistList List&lt;ArtistInfo&gt;
+   * @param userUuid java.util.UUID
+   */
+  public void processArtistRatings(List<ArtistInfo> artistList, UUID userUuid) {
+    CassandraRatingsService cassandraRatingsService = CassandraRatingsService.getInstance();
+    for (ArtistInfo artistInfo : artistList) {
+      Optional<AverageRatingsDto> averageRatingsDto =
+          cassandraRatingsService
+              .getAverageRating(UUID.fromString(artistInfo.getArtistId()), "Artist").toBlocking()
+              .first();
 
-            if ( averageRatingsDto.isPresent() ) {
-                long average = averageRatingsDto.get().getNumRating() / averageRatingsDto.get().getSumRating();
-                albumInfo.setAverageRating((int) average);
-            }
+      if (averageRatingsDto.isPresent()) {
+        long average =
+            averageRatingsDto.get().getNumRating() / averageRatingsDto.get().getSumRating();
+        artistInfo.setAverageRating((int) average);
+      }
 
-            Optional<UserRatingsDto> userRatingsDto = cassandraRatingsService
-                .getUserRating(userUuid, "Album", UUID.fromString(albumInfo.getAlbumId())).toBlocking().first();
-            if ( userRatingsDto.isPresent() ) {
-                albumInfo.setPersonalRating(userRatingsDto.get().getRating());
-            }
+      Optional<UserRatingsDto> userRatingsDto =
+          cassandraRatingsService
+              .getUserRating(userUuid, "Artist", UUID.fromString(artistInfo.getArtistId()))
+              .toBlocking().first();
+      if (userRatingsDto.isPresent()) {
+        artistInfo.setPersonalRating(userRatingsDto.get().getRating());
+      }
 
-        }
     }
+  }
 
-    /**
-     * Adds average and user ratings to a list of ArtistInfo objects
-     *
-     * @param artistList List&lt;ArtistInfo&gt;
-     * @param userUuid java.util.UUID
-     */
-    public void processArtistRatings(List<ArtistInfo> artistList, UUID userUuid) {
-        CassandraRatingsService cassandraRatingsService = CassandraRatingsService.getInstance();
-        for ( ArtistInfo artistInfo : artistList ) {
-            Optional<AverageRatingsDto> averageRatingsDto = cassandraRatingsService
-                .getAverageRating(UUID.fromString(artistInfo.getArtistId()), "Artist").toBlocking().first();
+  /**
+   * Adds average and user rating data on a list of SongInfo objects
+   *
+   * @param songList List&lt;SongInfo&gt;
+   * @param userUuid java.util.UUID
+   */
+  public void processSongRatings(List<SongInfo> songList, UUID userUuid) {
+    CassandraRatingsService cassandraRatingsService = CassandraRatingsService.getInstance();
+    for (SongInfo songInfo : songList) {
+      Optional<AverageRatingsDto> averageRatingsDto =
+          cassandraRatingsService.getAverageRating(UUID.fromString(songInfo.getSongId()), "Song")
+              .toBlocking().first();
 
-            if ( averageRatingsDto.isPresent() ) {
-                long average = averageRatingsDto.get().getNumRating() / averageRatingsDto.get().getSumRating();
-                artistInfo.setAverageRating((int) average);
-            }
+      if (averageRatingsDto.isPresent()) {
+        long average =
+            averageRatingsDto.get().getNumRating() / averageRatingsDto.get().getSumRating();
+        songInfo.setAverageRating((int) average);
+      }
 
-            Optional<UserRatingsDto> userRatingsDto = cassandraRatingsService
-                .getUserRating(userUuid, "Artist", UUID.fromString(artistInfo.getArtistId())).toBlocking().first();
-            if ( userRatingsDto.isPresent() ) {
-                artistInfo.setPersonalRating(userRatingsDto.get().getRating());
-            }
-
-        }
+      Optional<UserRatingsDto> userRatingsDto =
+          cassandraRatingsService
+              .getUserRating(userUuid, "Song", UUID.fromString(songInfo.getSongId())).toBlocking()
+              .first();
+      if (userRatingsDto.isPresent()) {
+        songInfo.setPersonalRating(userRatingsDto.get().getRating());
+      }
     }
-
-    /**
-     * Adds average and user rating data on a list of SongInfo objects
-     *
-     * @param songList List&lt;SongInfo&gt;
-     * @param userUuid java.util.UUID
-     */
-    public void processSongRatings(List<SongInfo> songList, UUID userUuid) {
-        CassandraRatingsService cassandraRatingsService = CassandraRatingsService.getInstance();
-        for ( SongInfo songInfo : songList ) {
-            Optional<AverageRatingsDto> averageRatingsDto = cassandraRatingsService
-                .getAverageRating(UUID.fromString(songInfo.getSongId()), "Song").toBlocking().first();
-
-            if ( averageRatingsDto.isPresent() ) {
-                long average = averageRatingsDto.get().getNumRating() / averageRatingsDto.get().getSumRating();
-                songInfo.setAverageRating((int) average);
-            }
-
-            Optional<UserRatingsDto> userRatingsDto = cassandraRatingsService
-                .getUserRating(userUuid, "Song", UUID.fromString(songInfo.getSongId())).toBlocking().first();
-            if ( userRatingsDto.isPresent() ) {
-                songInfo.setPersonalRating(userRatingsDto.get().getRating());
-            }
-        }
-    }
+  }
 
 }
