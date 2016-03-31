@@ -8,11 +8,6 @@ is an example of building a swagger-enabled JAX-RS server.
 This example uses the [JAX-RS](https://jax-rs-spec.java.net/) framework.
 
 ## Before starting
-Run the build maven script to generate swagger generated code, package local jars and instal on local repository. Run this from the `/server` directory
-```
-mvn clean compile 
-```
-
 To generate sources from swagger spec
 ```
 mvn -P build clean generate-sources
@@ -22,6 +17,11 @@ To run the jetty server on port `9002`, please execute the following:
 ```
 mvn -P dev clean jetty:run
 ```
+To test server is running first login (see msl-login-edge) and hit: 
+```
+curl 'http://msl.kenzanlabs.com:9002/account-edge/users/mylibrary' -H 'Pragma: no-cache' -H 'Origin: http://msl.kenzanlabs.com:3000' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: en,es;q=0.8,pt-BR;q=0.6,pt;q=0.4' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36' -H 'Accept: application/json, text/plain, */*' -H 'Referer: http://msl.kenzanlabs.com:3000/' -H 'Cookie: sessionToken=b6ee05ed-47a0-4c9e-97a5-93b37eeb645e; authenticated=Thu%20Mar%2031%2014%3A12%3A26%20CST%202016' -H 'Connection: keep-alive' -H 'Cache-Control: no-cache' --compressed
+```
+
 
 To format code
 ```
@@ -30,21 +30,15 @@ mvn clean formatter:format
 
 ### Install dependencies without running tests 
 ```
-mvn -P no-test clean install
+mvn -P no-tests clean install
 ```
 
-### RPM && JAR packaging
+### JAR packaging
 ```
 mvn -P no-tests package
 ```
 
 ##Reports
-###Surefire reports:
-```
-mvn site
-```
-report gets generated under `/target/site/index.html`
- 
 ###Cobertura
 ```
 mvn cobertura:cobertura
@@ -56,10 +50,4 @@ report gets generated under `/target/site/cobertura/index.html`
 mvn package
 ```
 report gets generated under `/target/site/jacoco`
-
-## Some dependencies required installation before running
-- msl-models
-- msl-account-data-client
-- msl-catalog-data-client
-- msl-ratings-data-client
 
