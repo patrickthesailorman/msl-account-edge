@@ -8,19 +8,24 @@ import com.kenzan.msl.account.client.services.CassandraAccountService;
 import io.swagger.model.MyLibrary;
 import rx.Observable;
 
-import java.util.UUID;
-
 /**
  * Implementation of the AccountEdge interface that retrieves its data from a Cassandra cluster.
  */
 public class AccountEdgeService implements AccountEdge {
 
-  private LibraryService libraryService;
-  private CassandraAccountService cassandraAccountService;
+  private final LibraryService libraryService;
+  private final CassandraAccountService cassandraAccountService;
 
-  public AccountEdgeService(LibraryService _libraryService) {
-    cassandraAccountService = CassandraAccountService.getInstance();
-    libraryService = _libraryService;
+  /**
+   * Constructor
+   *
+   * @param libraryService com.kenzan.msl.account.edge.services LibraryService
+   * @param cassandraAccountService com.kenzan.msl.account.client.services.CassandraAccountService
+   */
+  public AccountEdgeService(final LibraryService libraryService,
+      final CassandraAccountService cassandraAccountService) {
+    this.libraryService = libraryService;
+    this.cassandraAccountService = cassandraAccountService;
   }
 
   /**
@@ -55,7 +60,7 @@ public class AccountEdgeService implements AccountEdge {
    * @return Observable&lt;MyLibrary&gt;
    */
   public Observable<MyLibrary> getMyLibrary(String sessionToken) {
-    return Observable.just(libraryService.get(cassandraAccountService, sessionToken));
+    return Observable.just(libraryService.get(sessionToken));
   }
 
   /**
@@ -66,7 +71,7 @@ public class AccountEdgeService implements AccountEdge {
    * @param contentType album/artist/song content type
    */
   public void addToLibrary(String object_id, String sessionToken, String contentType) {
-    libraryService.add(cassandraAccountService, object_id, sessionToken, contentType);
+    libraryService.add(object_id, sessionToken, contentType);
   }
 
   /**
@@ -79,6 +84,6 @@ public class AccountEdgeService implements AccountEdge {
    */
   public void removeFromLibrary(String object_id, String timestamp, String sessionToken,
       String contentType) {
-    libraryService.remove(cassandraAccountService, object_id, timestamp, sessionToken, contentType);
+    libraryService.remove(object_id, timestamp, sessionToken, contentType);
   }
 }

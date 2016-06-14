@@ -6,6 +6,7 @@ package com.kenzan.msl.account.edge.services;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
+import com.kenzan.msl.account.edge.Main;
 import com.kenzan.msl.catalog.client.dto.AlbumArtistBySongDto;
 import com.kenzan.msl.catalog.client.dto.SongsAlbumsByArtistDto;
 import com.kenzan.msl.catalog.client.dto.SongsArtistByAlbumDto;
@@ -19,6 +20,17 @@ import java.util.UUID;
 
 public class LibraryServiceHelper {
 
+  private final CassandraCatalogService cassandraCatalogService;
+
+  /**
+   * Constructor
+   *
+   * @param cassandraCatalogService
+   */
+  public LibraryServiceHelper(final CassandraCatalogService cassandraCatalogService) {
+    this.cassandraCatalogService = cassandraCatalogService;
+  }
+
   /**
    * Retrieves a specific artist from teh songs_albums_by_artist cassandra table
    *
@@ -26,8 +38,6 @@ public class LibraryServiceHelper {
    * @return Optional&lt;ArtistBo&gt;
    */
   public Optional<ArtistBo> getArtist(final UUID artistId) {
-    CassandraCatalogService cassandraCatalogService = CassandraCatalogService.getInstance();
-
     Observable<ResultSet> observableArtist =
         cassandraCatalogService.getSongsAlbumsByArtist(artistId, Optional.absent());
 
@@ -40,6 +50,10 @@ public class LibraryServiceHelper {
 
     ArtistBo artistBo = new ArtistBo();
     SongsAlbumsByArtistDto songsAlbumsByArtistDto = mappingResult.one();
+
+    if (songsAlbumsByArtistDto == null) {
+      return Optional.absent();
+    }
 
     artistBo.setArtistId(songsAlbumsByArtistDto.getArtistId());
     artistBo.setArtistName(songsAlbumsByArtistDto.getArtistName());
@@ -64,8 +78,6 @@ public class LibraryServiceHelper {
    * @return Optional&lt;AlbumBo&gt;
    */
   public Optional<AlbumBo> getAlbum(final UUID albumId) {
-    CassandraCatalogService cassandraCatalogService = CassandraCatalogService.getInstance();
-
     Observable<ResultSet> observableAlbum =
         cassandraCatalogService.getSongsArtistByAlbum(albumId, Optional.absent());
 
@@ -78,6 +90,10 @@ public class LibraryServiceHelper {
 
     AlbumBo albumBo = new AlbumBo();
     SongsArtistByAlbumDto songsArtistByAlbumDto = mapResults.one();
+
+    if (songsArtistByAlbumDto == null) {
+      return Optional.absent();
+    }
 
     albumBo.setAlbumId(songsArtistByAlbumDto.getAlbumId());
     albumBo.setAlbumName(songsArtistByAlbumDto.getAlbumName());
@@ -100,8 +116,6 @@ public class LibraryServiceHelper {
    * @return Optional&lt;SongBo&gt;
    */
   public Optional<SongBo> getSong(final UUID songId) {
-    CassandraCatalogService cassandraCatalogService = CassandraCatalogService.getInstance();
-
     Observable<ResultSet> observableSong =
         cassandraCatalogService.getAlbumArtistBySong(songId, Optional.absent());
 
@@ -114,6 +128,10 @@ public class LibraryServiceHelper {
 
     SongBo songBo = new SongBo();
     AlbumArtistBySongDto albumArtistBySongDto = mapResults.one();
+
+    if (albumArtistBySongDto == null) {
+      return Optional.absent();
+    }
 
     songBo.setSongId(albumArtistBySongDto.getSongId());
     songBo.setSongName(albumArtistBySongDto.getSongName());

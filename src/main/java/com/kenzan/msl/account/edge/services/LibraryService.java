@@ -26,31 +26,45 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-public class LibraryService extends LibraryServiceHelper {
+public class LibraryService {
+
+  private final CassandraAccountService cassandraAccountService;
+  private final LibraryServiceHelper libraryServiceHelper;
+  private final RatingsHelper ratingsHelper;
+
+  /**
+   * Constructor
+   *
+   * @param cassandraAccountService com.kenzan.msl.account.client.services.CassandraAccountService
+   * @param libraryServiceHelper com.kenzan.msl.catalog.client.services.LibraryServiceHelper
+   * @param ratingsHelper com.kenzan.msl.account.edge.services.RatingsHelper
+   */
+  public LibraryService(final CassandraAccountService cassandraAccountService,
+      final LibraryServiceHelper libraryServiceHelper, final RatingsHelper ratingsHelper) {
+    this.cassandraAccountService = cassandraAccountService;
+    this.libraryServiceHelper = libraryServiceHelper;
+    this.ratingsHelper = ratingsHelper;
+  }
 
   /**
    * Retrieves the MyLibrary object with contained albums artist and songs
    *
-   * @param cassandraAccountService com.kenzan.msl.server.services.CassandraAccountService
    * @param sessionToken uuid of authenticated user
    * @return MyLibrary
    */
-  public MyLibrary get(final CassandraAccountService cassandraAccountService,
-      final String sessionToken) {
-
-    RatingsHelper ratingsHelper = RatingsHelper.getInstance();
+  public MyLibrary get(final String sessionToken) {
 
     MyLibrary myLibrary = new MyLibrary();
 
-    List<AlbumInfo> albumInfoList = getMyLibraryAlbums(cassandraAccountService, sessionToken);
+    List<AlbumInfo> albumInfoList = getMyLibraryAlbums(sessionToken);
     ratingsHelper.processAlbumRatings(albumInfoList, UUID.fromString(sessionToken));
     myLibrary.setAlbums(albumInfoList);
 
-    List<ArtistInfo> artistInfoList = getMyLibraryArtists(cassandraAccountService, sessionToken);
+    List<ArtistInfo> artistInfoList = getMyLibraryArtists(sessionToken);
     ratingsHelper.processArtistRatings(artistInfoList, UUID.fromString(sessionToken));
     myLibrary.setArtists(artistInfoList);
 
-    List<SongInfo> songInfoList = getMyLibrarySongs(cassandraAccountService, sessionToken);
+    List<SongInfo> songInfoList = getMyLibrarySongs(sessionToken);
     ratingsHelper.processSongRatings(songInfoList, UUID.fromString(sessionToken));
     myLibrary.setSongs(songInfoList);
 
@@ -60,19 +74,17 @@ public class LibraryService extends LibraryServiceHelper {
   /**
    * Adds data into a user library
    *
-   * @param cassandraAccountService com.kenzan.msl.server.services.CassandraAccountService
    * @param id object uuid
    * @param sessionToken authenticated user uuid
    * @param contentType content type (artist|album|song)
    */
-  public void add(final CassandraAccountService cassandraAccountService, final String id,
-      final String sessionToken, final String contentType) {
+  public void add(final String id, final String sessionToken, final String contentType) {
 
-    MyLibrary myLibrary = get(cassandraAccountService, sessionToken);
+    MyLibrary myLibrary = get(sessionToken);
 
     switch (contentType) {
       case "Artist":
-        Optional<ArtistBo> optArtistBo = getArtist(UUID.fromString(id));
+        Optional<ArtistBo> optArtistBo = libraryServiceHelper.getArtist(UUID.fromString(id));
 
         if (optArtistBo.isPresent() && !isInLibrary(optArtistBo.get(), myLibrary)) {
           try {
@@ -87,7 +99,7 @@ public class LibraryService extends LibraryServiceHelper {
         }
         break;
       case "Album":
-        Optional<AlbumBo> optAlbumBo = getAlbum(UUID.fromString(id));
+        Optional<AlbumBo> optAlbumBo = libraryServiceHelper.getAlbum(UUID.fromString(id));
 
         if (optAlbumBo.isPresent() && !isInLibrary(optAlbumBo.get(), myLibrary)) {
           try {
@@ -102,7 +114,7 @@ public class LibraryService extends LibraryServiceHelper {
         }
         break;
       case "Song":
-        Optional<SongBo> optSongBo = getSong(UUID.fromString(id));
+        Optional<SongBo> optSongBo = libraryServiceHelper.getSong(UUID.fromString(id));
 
         if (optSongBo.isPresent() && !isInLibrary(optSongBo.get(), myLibrary)) {
           try {
@@ -122,24 +134,22 @@ public class LibraryService extends LibraryServiceHelper {
   /**
    * Deletes a song, an album or an artist from a user library
    *
-   * @param cassandraAccountService com.kenzan.msl.server.services.CassandraAccountService
    * @param id song, album or artist Id
    * @param timestamp timestamp set on REST endpoint as String
    * @param sessionToken user UUID as String
    * @param contentType song, album or artist
    */
-  public void remove(final CassandraAccountService cassandraAccountService, final String id,
-      final String timestamp, final String sessionToken, final String contentType) {
+  public void remove(final String id, final String timestamp, final String sessionToken,
+      final String contentType) {
 
     Date favoritesTimestamp = new Date(Long.parseLong(timestamp));
     switch (contentType) {
       case "Song":
         try {
-          int initialSongsOnLibrary =
-              getMyLibrarySongs(cassandraAccountService, sessionToken).size();
+          int initialSongsOnLibrary = getMyLibrarySongs(sessionToken).size();
           cassandraAccountService.deleteSongsByUser(UUID.fromString(sessionToken),
               favoritesTimestamp, UUID.fromString(id));
-          int postSongsOnLibrary = getMyLibrarySongs(cassandraAccountService, sessionToken).size();
+          int postSongsOnLibrary = getMyLibrarySongs(sessionToken).size();
           if (initialSongsOnLibrary <= postSongsOnLibrary) {
             throw new RuntimeErrorException(new Error("Unable to delete song"));
           }
@@ -149,12 +159,10 @@ public class LibraryService extends LibraryServiceHelper {
         break;
       case "Artist":
         try {
-          int initialArtistsOnLibrary =
-              getMyLibraryArtists(cassandraAccountService, sessionToken).size();
+          int initialArtistsOnLibrary = getMyLibraryArtists(sessionToken).size();
           cassandraAccountService.deleteArtistsByUser(UUID.fromString(sessionToken),
               favoritesTimestamp, UUID.fromString(id));
-          int postArtistsOnLibrary =
-              getMyLibraryArtists(cassandraAccountService, sessionToken).size();
+          int postArtistsOnLibrary = getMyLibraryArtists(sessionToken).size();
           if (initialArtistsOnLibrary <= postArtistsOnLibrary) {
             throw new RuntimeErrorException(new Error("Unable to delete artist"));
           }
@@ -164,12 +172,10 @@ public class LibraryService extends LibraryServiceHelper {
         break;
       case "Album":
         try {
-          int initialAlbumsOnLibrary =
-              getMyLibraryAlbums(cassandraAccountService, sessionToken).size();
+          int initialAlbumsOnLibrary = getMyLibraryAlbums(sessionToken).size();
           cassandraAccountService.deleteAlbumsByUser(UUID.fromString(sessionToken),
               favoritesTimestamp, UUID.fromString(id));
-          int postAlbumsOnLibrary =
-              getMyLibraryAlbums(cassandraAccountService, sessionToken).size();
+          int postAlbumsOnLibrary = getMyLibraryAlbums(sessionToken).size();
           if (initialAlbumsOnLibrary <= postAlbumsOnLibrary) {
             throw new RuntimeErrorException(new Error("Unable to delete album"));
           }
@@ -183,12 +189,10 @@ public class LibraryService extends LibraryServiceHelper {
   /**
    * Retrieves the album on a user library
    *
-   * @param cassandraAccountService com.kenzan.msl.server.services.CassandraAccountService
    * @param uuid authenticated user uuid
    * @return List&lt;AlbumInfo&gt;
    */
-  private List<AlbumInfo> getMyLibraryAlbums(final CassandraAccountService cassandraAccountService,
-      final String uuid) {
+  private List<AlbumInfo> getMyLibraryAlbums(final String uuid) {
     Observable<ResultSet> results =
         cassandraAccountService.getAlbumsByUser(UUID.fromString(uuid), Optional.absent(),
             Optional.absent());
@@ -202,12 +206,10 @@ public class LibraryService extends LibraryServiceHelper {
   /**
    * Retrieves the artist list from a respective user library
    *
-   * @param cassandraAccountService com.kenzan.msl.server.services.CassandraAccountService
    * @param uuid uuid of authenticated user
    * @return List&lt;ArtistInfo&gt;
    */
-  private List<ArtistInfo> getMyLibraryArtists(
-      final CassandraAccountService cassandraAccountService, final String uuid) {
+  private List<ArtistInfo> getMyLibraryArtists(final String uuid) {
 
     Observable<ResultSet> results =
         cassandraAccountService.getArtistsByUser(UUID.fromString(uuid), Optional.absent(),
@@ -222,12 +224,10 @@ public class LibraryService extends LibraryServiceHelper {
   /**
    * Retrieves the songs from a user library
    *
-   * @param cassandraAccountService com.kenzan.msl.server.services.CassandraAccountService
    * @param uuid authenticated user uuid
    * @return List&lt;SongInfo&gt;
    */
-  private List<SongInfo> getMyLibrarySongs(final CassandraAccountService cassandraAccountService,
-      final String uuid) {
+  private List<SongInfo> getMyLibrarySongs(final String uuid) {
 
     Observable<ResultSet> results =
         cassandraAccountService.getSongsByUser(UUID.fromString(uuid), Optional.absent(),

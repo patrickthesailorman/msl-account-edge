@@ -14,169 +14,154 @@ import com.kenzan.msl.catalog.client.services.CassandraCatalogService;
 import com.kenzan.msl.common.bo.AlbumBo;
 import com.kenzan.msl.common.bo.ArtistBo;
 import com.kenzan.msl.common.bo.SongBo;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.easymock.PowerMock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import rx.Observable;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CassandraCatalogService.class)
-public class LibraryServiceHelperTest {
+@RunWith(MockitoJUnitRunner.class)
+public class LibraryServiceHelperTest extends TestConstants {
 
-  private TestConstants tc = TestConstants.getInstance();
-  private LibraryServiceHelper lsh = new LibraryServiceHelper();
+  @Mock
+  private ResultSet resultSet;
+
+  @Mock
+  private Result<SongsAlbumsByArtistDto> songsAlbumsByArtistDtoResult;
+
+  @Mock
+  private Result<SongsArtistByAlbumDto> songsArtistByAlbumDtoResult;
+
+  @Mock
+  private Result<AlbumArtistBySongDto> albumArtistBySongDtoResult;
+
+  @Mock
   private CassandraCatalogService cassandraCatalogService;
 
-  private Observable<ResultSet> observableResultSet;
-
-  @Before
-  public void init() throws Exception {
-    ResultSet resultSet = createMock(ResultSet.class);
-    observableResultSet = Observable.just(resultSet);
-
-    PowerMock.mockStatic(CassandraCatalogService.class);
-    cassandraCatalogService = createMock(CassandraCatalogService.class);
-    PowerMock.expectNew(CassandraCatalogService.class).andReturn(cassandraCatalogService);
-
-    expect(CassandraCatalogService.getInstance()).andReturn(cassandraCatalogService).anyTimes();
-  }
+  @InjectMocks
+  private LibraryServiceHelper libraryServiceHelper;
 
   @Test
-  public void testGetArtistWhenNull() {
-    expect(cassandraCatalogService.getSongsAlbumsByArtist(tc.ARTIST_UUID, Optional.absent()))
-        .andReturn(observableResultSet);
-
-    expect(cassandraCatalogService.mapSongsAlbumsByArtist(observableResultSet)).andReturn(
-        Observable.just(null));
-
-    replay(cassandraCatalogService);
-    PowerMock.replayAll();
-
-    /* *************************** */
-
-    Optional<ArtistBo> result = lsh.getArtist(tc.ARTIST_UUID);
-    assertEquals(result, Optional.absent());
-  }
-
-  @Test
-  public void testGetArtist() {
-    Result<SongsAlbumsByArtistDto> songsAlbumsByArtistDtoResult = PowerMockito.mock(Result.class);
-    PowerMockito.when(songsAlbumsByArtistDtoResult.one()).thenReturn(tc.songsAlbumsByArtistDto);
-
-    expect(cassandraCatalogService.getSongsAlbumsByArtist(tc.ARTIST_UUID, Optional.absent()))
-        .andReturn(observableResultSet);
-
-    expect(cassandraCatalogService.mapSongsAlbumsByArtist(observableResultSet)).andReturn(
+  public void getArtistTest() {
+    when(cassandraCatalogService.getSongsAlbumsByArtist(ARTIST_UUID, Optional.absent()))
+        .thenReturn(Observable.just(resultSet));
+    when(cassandraCatalogService.mapSongsAlbumsByArtist(anyObject())).thenReturn(
         Observable.just(songsAlbumsByArtistDtoResult));
+    when(songsAlbumsByArtistDtoResult.one()).thenReturn(songsAlbumsByArtistDto);
+    Optional<ArtistBo> results = libraryServiceHelper.getArtist(ARTIST_UUID);
 
-    replay(cassandraCatalogService);
-    PowerMock.replayAll();
-
-    /* *************************** */
-
-    Optional<ArtistBo> result = lsh.getArtist(tc.ARTIST_UUID);
-    assertNotNull(result.get());
-    assertEquals(result.get().getArtistId(), tc.songsAlbumsByArtistDto.getArtistId());
-    assertEquals(result.get().getArtistName(), tc.songsAlbumsByArtistDto.getArtistName());
-    assertEquals(result.get().getGenre(), tc.GENRE);
+    assertTrue(results.isPresent());
+    assertEquals(results.get().getArtistId(), songsAlbumsByArtistDto.getArtistId());
+    assertEquals(results.get().getArtistName(), songsAlbumsByArtistDto.getArtistName());
   }
 
   @Test
-  public void testGetAlbumWhenNull() {
-    expect(cassandraCatalogService.getSongsArtistByAlbum(tc.ALBUM_UUID, Optional.absent()))
-        .andReturn(observableResultSet);
-
-    expect(cassandraCatalogService.mapSongsArtistByAlbum(observableResultSet)).andReturn(
+  public void getArtistTestEmptyMapping() {
+    when(cassandraCatalogService.getSongsAlbumsByArtist(ARTIST_UUID, Optional.absent()))
+        .thenReturn(Observable.just(resultSet));
+    when(cassandraCatalogService.mapSongsAlbumsByArtist(anyObject())).thenReturn(
         Observable.just(null));
-
-    replay(cassandraCatalogService);
-    PowerMock.replayAll();
-
-    /* *************************** */
-
-    Optional<AlbumBo> result = lsh.getAlbum(tc.ALBUM_UUID);
-    assertEquals(result, Optional.absent());
+    Optional<ArtistBo> results = libraryServiceHelper.getArtist(ARTIST_UUID);
+    assertFalse(results.isPresent());
   }
 
   @Test
-  public void testGetAlbum() {
-    Result<SongsArtistByAlbumDto> songsArtistByAlbumDtoResult = PowerMockito.mock(Result.class);
-    PowerMockito.when(songsArtistByAlbumDtoResult.one()).thenReturn(tc.songsArtistByAlbumDto);
+  public void getArtistTestEmptySongsAlbumsByArtistDto() {
+    when(cassandraCatalogService.getSongsAlbumsByArtist(ARTIST_UUID, Optional.absent()))
+        .thenReturn(Observable.just(resultSet));
+    when(cassandraCatalogService.mapSongsAlbumsByArtist(anyObject())).thenReturn(
+        Observable.just(songsAlbumsByArtistDtoResult));
+    when(songsAlbumsByArtistDtoResult.one()).thenReturn(null);
+    Optional<ArtistBo> results = libraryServiceHelper.getArtist(ARTIST_UUID);
+    assertFalse(results.isPresent());
+  }
 
-    expect(cassandraCatalogService.getSongsArtistByAlbum(tc.ALBUM_UUID, Optional.absent()))
-        .andReturn(observableResultSet);
-
-    expect(cassandraCatalogService.mapSongsArtistByAlbum(observableResultSet)).andReturn(
+  @Test
+  public void getAlbumTest() {
+    when(cassandraCatalogService.getSongsArtistByAlbum(ALBUM_UUID, Optional.absent())).thenReturn(
+        Observable.just(resultSet));
+    when(cassandraCatalogService.mapSongsArtistByAlbum(anyObject())).thenReturn(
         Observable.just(songsArtistByAlbumDtoResult));
-
-    replay(cassandraCatalogService);
-    PowerMock.replayAll();
-
-    /* *************************** */
-
-    Optional<AlbumBo> result = lsh.getAlbum(tc.ALBUM_UUID);
-    assertNotNull(result.get());
-    assertEquals(result.get().getAlbumId(), tc.songsArtistByAlbumDto.getAlbumId());
-    assertEquals(result.get().getAlbumName(), tc.songsArtistByAlbumDto.getAlbumName());
-    assertEquals(result.get().getArtistId(), tc.songsArtistByAlbumDto.getArtistId());
-    assertEquals(result.get().getArtistName(), tc.songsArtistByAlbumDto.getArtistName());
-    assertEquals(result.get().getImageLink(), tc.songsArtistByAlbumDto.getImageLink());
-    assertEquals(result.get().getGenre(), tc.GENRE);
+    when(songsArtistByAlbumDtoResult.one()).thenReturn(songsArtistByAlbumDto);
+    Optional<AlbumBo> results = libraryServiceHelper.getAlbum(ALBUM_UUID);
+    assertTrue(results.isPresent());
+    assertEquals(results.get().getAlbumId(), songsArtistByAlbumDto.getAlbumId());
+    assertEquals(results.get().getAlbumName(), songsArtistByAlbumDto.getAlbumName());
+    assertEquals(results.get().getArtistId(), songsArtistByAlbumDto.getArtistId());
+    assertEquals(results.get().getArtistName(), songsArtistByAlbumDto.getArtistName());
+    assertEquals(results.get().getImageLink(), songsArtistByAlbumDto.getImageLink());
   }
 
   @Test
-  public void testGetSongWhenNull() {
-    expect(cassandraCatalogService.getAlbumArtistBySong(tc.SONG_UUID, Optional.absent()))
-        .andReturn(observableResultSet);
+  public void getAlbumTestEmptyMappingResults() {
+    when(cassandraCatalogService.getSongsArtistByAlbum(ALBUM_UUID, Optional.absent())).thenReturn(
+        Observable.just(resultSet));
+    when(cassandraCatalogService.mapSongsArtistByAlbum(anyObject())).thenReturn(
+        Observable.just(null));
+    Optional<AlbumBo> results = libraryServiceHelper.getAlbum(ALBUM_UUID);
+    assertFalse(results.isPresent());
+  }
 
-    expect(cassandraCatalogService.mapAlbumArtistBySong(observableResultSet)).andReturn(
+  @Test
+  public void getAlbumTestEmptySongsArtistByAlbumDto() {
+    when(cassandraCatalogService.getSongsArtistByAlbum(ALBUM_UUID, Optional.absent())).thenReturn(
+        Observable.just(resultSet));
+    when(cassandraCatalogService.mapSongsArtistByAlbum(anyObject())).thenReturn(
+        Observable.just(songsArtistByAlbumDtoResult));
+    when(songsArtistByAlbumDtoResult.one()).thenReturn(null);
+    Optional<AlbumBo> results = libraryServiceHelper.getAlbum(ALBUM_UUID);
+    assertFalse(results.isPresent());
+  }
+
+  @Test
+  public void getSongTest() {
+    when(cassandraCatalogService.getAlbumArtistBySong(SONG_UUID, Optional.absent())).thenReturn(
+        Observable.just(resultSet));
+    when(cassandraCatalogService.mapAlbumArtistBySong(anyObject())).thenReturn(
+        Observable.just(albumArtistBySongDtoResult));
+    when(albumArtistBySongDtoResult.one()).thenReturn(albumArtistBySongDto);
+
+    Optional<SongBo> results = libraryServiceHelper.getSong(SONG_UUID);
+    assertTrue(results.isPresent());
+
+    assertEquals(results.get().getSongId(), albumArtistBySongDto.getSongId());
+    assertEquals(results.get().getSongName(), albumArtistBySongDto.getSongName());
+    assertEquals(results.get().getAlbumId(), albumArtistBySongDto.getAlbumId());
+    assertEquals(results.get().getAlbumName(), albumArtistBySongDto.getAlbumName());
+    assertEquals(results.get().getArtistId(), albumArtistBySongDto.getArtistId());
+    assertEquals(results.get().getArtistName(), albumArtistBySongDto.getArtistName());
+    assertEquals(results.get().getDuration(), albumArtistBySongDto.getSongDuration());
+    assertEquals(results.get().getYear(), albumArtistBySongDto.getAlbumYear());
+  }
+
+  @Test
+  public void getSongTestEmptyMappingResults() {
+    when(cassandraCatalogService.getAlbumArtistBySong(SONG_UUID, Optional.absent())).thenReturn(
+        Observable.just(resultSet));
+    when(cassandraCatalogService.mapAlbumArtistBySong(anyObject())).thenReturn(
         Observable.just(null));
 
-    replay(cassandraCatalogService);
-    PowerMock.replayAll();
-
-    /* *************************** */
-
-    Optional<SongBo> result = lsh.getSong(tc.SONG_UUID);
-    assertEquals(result, Optional.absent());
+    Optional<SongBo> results = libraryServiceHelper.getSong(SONG_UUID);
+    assertFalse(results.isPresent());
   }
 
   @Test
-  public void testGetSong() {
-    Result<AlbumArtistBySongDto> albumArtistBySongDtoResult = PowerMockito.mock(Result.class);
-    PowerMockito.when(albumArtistBySongDtoResult.one()).thenReturn(tc.albumArtistBySongDto);
-
-    expect(cassandraCatalogService.getAlbumArtistBySong(tc.SONG_UUID, Optional.absent()))
-        .andReturn(observableResultSet);
-
-    expect(cassandraCatalogService.mapAlbumArtistBySong(observableResultSet)).andReturn(
+  public void getSongTestEmptyAlbumArtistBySongDto() {
+    when(cassandraCatalogService.getAlbumArtistBySong(SONG_UUID, Optional.absent())).thenReturn(
+        Observable.just(resultSet));
+    when(cassandraCatalogService.mapAlbumArtistBySong(anyObject())).thenReturn(
         Observable.just(albumArtistBySongDtoResult));
+    when(albumArtistBySongDtoResult.one()).thenReturn(null);
 
-    replay(cassandraCatalogService);
-    PowerMock.replayAll();
-
-    /* *************************** */
-
-    Optional<SongBo> result = lsh.getSong(tc.SONG_UUID);
-    assertNotNull(result.get());
-
-    assertEquals(result.get().getSongId(), tc.albumArtistBySongDto.getSongId());
-    assertEquals(result.get().getSongName(), tc.albumArtistBySongDto.getSongName());
-    assertEquals(result.get().getAlbumId(), tc.albumArtistBySongDto.getAlbumId());
-    assertEquals(result.get().getAlbumName(), tc.albumArtistBySongDto.getAlbumName());
-    assertEquals(result.get().getArtistId(), tc.albumArtistBySongDto.getArtistId());
-    assertEquals(result.get().getArtistName(), tc.albumArtistBySongDto.getArtistName());
-    assertEquals(result.get().getDuration(), tc.albumArtistBySongDto.getSongDuration());
-    assertEquals(result.get().getGenre(), tc.GENRE);
+    Optional<SongBo> results = libraryServiceHelper.getSong(SONG_UUID);
+    assertFalse(results.isPresent());
   }
+
 }

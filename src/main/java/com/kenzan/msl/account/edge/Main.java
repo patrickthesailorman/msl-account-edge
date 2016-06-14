@@ -1,5 +1,6 @@
 package com.kenzan.msl.account.edge;
 
+import com.google.common.base.Optional;
 import io.swagger.api.AccountEdgeApi;
 import io.swagger.api.impl.AccountEdgeApiOriginFilter;
 import org.eclipse.jetty.server.Server;
@@ -15,6 +16,8 @@ import netflix.karyon.servo.KaryonServoModule;
 
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
+import java.util.HashMap;
+
 import netflix.adminresources.resources.KaryonWebAdminModule;
 
 // import netflix.karyon.jersey.blocking.KaryonJerseyModule;
@@ -26,13 +29,21 @@ import netflix.adminresources.resources.KaryonWebAdminModule;
     // KaryonEurekaModule.class, // Uncomment this to enable Eureka client.
     KaryonServoModule.class})
 public class Main {
+
+  public static HashMap archaiusProperties = new HashMap<String, Optional<String>>();
+
   /**
    * Runs jetty server to expose jersey API
-   * 
+   *
    * @param args String array
    * @throws Exception if server doesn't start
    */
   public static void main(String[] args) throws Exception {
+
+    archaiusProperties.put("region",
+        Optional.fromNullable(System.getProperty("archaius.deployment.region")));
+    archaiusProperties.put("domainName",
+        Optional.fromNullable(System.getProperty("archaius.deployment.domainName")));
 
     Server jettyServer = new Server(9002);
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
