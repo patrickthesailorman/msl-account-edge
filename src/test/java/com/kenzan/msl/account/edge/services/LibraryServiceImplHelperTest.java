@@ -7,6 +7,7 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
 import com.kenzan.msl.account.edge.TestConstants;
+import com.kenzan.msl.account.edge.services.impl.LibraryServiceHelperImpl;
 import com.kenzan.msl.catalog.client.dto.AlbumArtistBySongDto;
 import com.kenzan.msl.catalog.client.dto.SongsAlbumsByArtistDto;
 import com.kenzan.msl.catalog.client.dto.SongsArtistByAlbumDto;
@@ -28,7 +29,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LibraryServiceHelperTest extends TestConstants {
+public class LibraryServiceImplHelperTest extends TestConstants {
 
   @Mock
   private ResultSet resultSet;
@@ -46,7 +47,7 @@ public class LibraryServiceHelperTest extends TestConstants {
   private CassandraCatalogService cassandraCatalogService;
 
   @InjectMocks
-  private LibraryServiceHelper libraryServiceHelper;
+  private LibraryServiceHelperImpl libraryServiceHelperImpl;
 
   @Test
   public void getArtistTest() {
@@ -55,7 +56,7 @@ public class LibraryServiceHelperTest extends TestConstants {
     when(cassandraCatalogService.mapSongsAlbumsByArtist(anyObject())).thenReturn(
         Observable.just(songsAlbumsByArtistDtoResult));
     when(songsAlbumsByArtistDtoResult.one()).thenReturn(songsAlbumsByArtistDto);
-    Optional<ArtistBo> results = libraryServiceHelper.getArtist(ARTIST_UUID);
+    Optional<ArtistBo> results = libraryServiceHelperImpl.getArtist(ARTIST_UUID);
 
     assertTrue(results.isPresent());
     assertEquals(results.get().getArtistId(), songsAlbumsByArtistDto.getArtistId());
@@ -68,7 +69,7 @@ public class LibraryServiceHelperTest extends TestConstants {
         .thenReturn(Observable.just(resultSet));
     when(cassandraCatalogService.mapSongsAlbumsByArtist(anyObject())).thenReturn(
         Observable.just(null));
-    Optional<ArtistBo> results = libraryServiceHelper.getArtist(ARTIST_UUID);
+    Optional<ArtistBo> results = libraryServiceHelperImpl.getArtist(ARTIST_UUID);
     assertFalse(results.isPresent());
   }
 
@@ -79,7 +80,7 @@ public class LibraryServiceHelperTest extends TestConstants {
     when(cassandraCatalogService.mapSongsAlbumsByArtist(anyObject())).thenReturn(
         Observable.just(songsAlbumsByArtistDtoResult));
     when(songsAlbumsByArtistDtoResult.one()).thenReturn(null);
-    Optional<ArtistBo> results = libraryServiceHelper.getArtist(ARTIST_UUID);
+    Optional<ArtistBo> results = libraryServiceHelperImpl.getArtist(ARTIST_UUID);
     assertFalse(results.isPresent());
   }
 
@@ -90,7 +91,7 @@ public class LibraryServiceHelperTest extends TestConstants {
     when(cassandraCatalogService.mapSongsArtistByAlbum(anyObject())).thenReturn(
         Observable.just(songsArtistByAlbumDtoResult));
     when(songsArtistByAlbumDtoResult.one()).thenReturn(songsArtistByAlbumDto);
-    Optional<AlbumBo> results = libraryServiceHelper.getAlbum(ALBUM_UUID);
+    Optional<AlbumBo> results = libraryServiceHelperImpl.getAlbum(ALBUM_UUID);
     assertTrue(results.isPresent());
     assertEquals(results.get().getAlbumId(), songsArtistByAlbumDto.getAlbumId());
     assertEquals(results.get().getAlbumName(), songsArtistByAlbumDto.getAlbumName());
@@ -105,7 +106,7 @@ public class LibraryServiceHelperTest extends TestConstants {
         Observable.just(resultSet));
     when(cassandraCatalogService.mapSongsArtistByAlbum(anyObject())).thenReturn(
         Observable.just(null));
-    Optional<AlbumBo> results = libraryServiceHelper.getAlbum(ALBUM_UUID);
+    Optional<AlbumBo> results = libraryServiceHelperImpl.getAlbum(ALBUM_UUID);
     assertFalse(results.isPresent());
   }
 
@@ -116,7 +117,7 @@ public class LibraryServiceHelperTest extends TestConstants {
     when(cassandraCatalogService.mapSongsArtistByAlbum(anyObject())).thenReturn(
         Observable.just(songsArtistByAlbumDtoResult));
     when(songsArtistByAlbumDtoResult.one()).thenReturn(null);
-    Optional<AlbumBo> results = libraryServiceHelper.getAlbum(ALBUM_UUID);
+    Optional<AlbumBo> results = libraryServiceHelperImpl.getAlbum(ALBUM_UUID);
     assertFalse(results.isPresent());
   }
 
@@ -128,7 +129,7 @@ public class LibraryServiceHelperTest extends TestConstants {
         Observable.just(albumArtistBySongDtoResult));
     when(albumArtistBySongDtoResult.one()).thenReturn(albumArtistBySongDto);
 
-    Optional<SongBo> results = libraryServiceHelper.getSong(SONG_UUID);
+    Optional<SongBo> results = libraryServiceHelperImpl.getSong(SONG_UUID);
     assertTrue(results.isPresent());
 
     assertEquals(results.get().getSongId(), albumArtistBySongDto.getSongId());
@@ -148,7 +149,7 @@ public class LibraryServiceHelperTest extends TestConstants {
     when(cassandraCatalogService.mapAlbumArtistBySong(anyObject())).thenReturn(
         Observable.just(null));
 
-    Optional<SongBo> results = libraryServiceHelper.getSong(SONG_UUID);
+    Optional<SongBo> results = libraryServiceHelperImpl.getSong(SONG_UUID);
     assertFalse(results.isPresent());
   }
 
@@ -160,7 +161,7 @@ public class LibraryServiceHelperTest extends TestConstants {
         Observable.just(albumArtistBySongDtoResult));
     when(albumArtistBySongDtoResult.one()).thenReturn(null);
 
-    Optional<SongBo> results = libraryServiceHelper.getSong(SONG_UUID);
+    Optional<SongBo> results = libraryServiceHelperImpl.getSong(SONG_UUID);
     assertFalse(results.isPresent());
   }
 

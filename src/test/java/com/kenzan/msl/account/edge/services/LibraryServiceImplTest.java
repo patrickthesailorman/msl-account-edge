@@ -8,6 +8,9 @@ import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
 import com.kenzan.msl.account.client.dto.SongsByUserDto;
 import com.kenzan.msl.account.client.services.CassandraAccountService;
 import com.kenzan.msl.account.edge.TestConstants;
+import com.kenzan.msl.account.edge.services.impl.LibraryServiceHelperImpl;
+import com.kenzan.msl.account.edge.services.impl.LibraryServiceImpl;
+import com.kenzan.msl.account.edge.services.impl.RatingsServiceImpl;
 import com.kenzan.msl.account.edge.translate.Translators;
 import com.kenzan.msl.common.ContentType;
 import io.swagger.model.MyLibrary;
@@ -32,7 +35,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Translators.class)
-public class LibraryServiceTest extends TestConstants {
+public class LibraryServiceImplTest extends TestConstants {
 
   private ResultSet resultSet;
   private Result<AlbumsByUserDto> albumsByUserDtoResult;
@@ -40,9 +43,9 @@ public class LibraryServiceTest extends TestConstants {
   private Result<SongsByUserDto> songsByUserDtoResult;
 
   private CassandraAccountService cassandraAccountService;
-  private RatingsHelper ratingsHelper;
-  private LibraryServiceHelper libraryServiceHelper;
-  private LibraryService libraryService;
+  private RatingsServiceImpl ratingsServiceImpl;
+  private LibraryServiceHelperImpl libraryServiceHelperImpl;
+  private LibraryServiceImpl libraryServiceImpl;
 
   @Before
   public void init() {
@@ -51,10 +54,11 @@ public class LibraryServiceTest extends TestConstants {
     songsByUserDtoResult = Mockito.mock(Result.class);
     cassandraAccountService = Mockito.mock(CassandraAccountService.class);
 
-    ratingsHelper = Mockito.mock(RatingsHelper.class);
-    libraryServiceHelper = Mockito.mock(LibraryServiceHelper.class);
-    libraryService =
-        new LibraryService(cassandraAccountService, libraryServiceHelper, ratingsHelper);
+    ratingsServiceImpl = Mockito.mock(RatingsServiceImpl.class);
+    libraryServiceHelperImpl = Mockito.mock(LibraryServiceHelperImpl.class);
+    libraryServiceImpl =
+        new LibraryServiceImpl(cassandraAccountService, libraryServiceHelperImpl,
+            ratingsServiceImpl);
     PowerMockito.mockStatic(Translators.class);
 
     mockGetMyLibraryAlbums();
@@ -64,9 +68,9 @@ public class LibraryServiceTest extends TestConstants {
 
   @Test
   public void getTest() {
-    MyLibrary response = libraryService.get(SESSION_TOKEN.toString());
+    MyLibrary response = libraryServiceImpl.get(SESSION_TOKEN.toString());
 
-    verify(ratingsHelper, times(1)).processAlbumRatings(albumList, SESSION_TOKEN);
+    verify(ratingsServiceImpl, times(1)).processAlbumRatings(albumList, SESSION_TOKEN);
     assertEquals(response.getAlbums(), albumList);
     assertEquals(response.getArtists(), artistList);
     assertEquals(response.getSongs(), songList);
@@ -74,50 +78,54 @@ public class LibraryServiceTest extends TestConstants {
 
   @Test
   public void addArtistTest() {
-    when(libraryServiceHelper.getArtist(ARTIST_UUID)).thenReturn(Optional.of(ARTIST_BO));
+    when(libraryServiceHelperImpl.getArtist(ARTIST_UUID)).thenReturn(Optional.of(ARTIST_BO));
     PowerMockito.when(Translators.translate(ARTIST_BO)).thenCallRealMethod();
 
-    libraryService.add(ARTIST_UUID.toString(), SESSION_TOKEN.toString(), ContentType.ARTIST.value);
+    libraryServiceImpl.add(ARTIST_UUID.toString(), SESSION_TOKEN.toString(),
+        ContentType.ARTIST.value);
     verify(cassandraAccountService, times(1)).addOrUpdateArtistsByUser(anyObject());
   }
 
   @Test
   public void addAlbumTest() {
-    when(libraryServiceHelper.getAlbum(ALBUM_UUID)).thenReturn(Optional.of(ALBUM_BO));
+    when(libraryServiceHelperImpl.getAlbum(ALBUM_UUID)).thenReturn(Optional.of(ALBUM_BO));
     PowerMockito.when(Translators.translate(ALBUM_BO)).thenCallRealMethod();
 
-    libraryService.add(ALBUM_UUID.toString(), SESSION_TOKEN.toString(), ContentType.ALBUM.value);
+    libraryServiceImpl
+        .add(ALBUM_UUID.toString(), SESSION_TOKEN.toString(), ContentType.ALBUM.value);
     verify(cassandraAccountService, times(1)).addOrUpdateAlbumsByUser(anyObject());
   }
 
   @Test
   public void addSongTest() {
-    when(libraryServiceHelper.getSong(SONG_UUID)).thenReturn(Optional.of(SONG_BO));
+    when(libraryServiceHelperImpl.getSong(SONG_UUID)).thenReturn(Optional.of(SONG_BO));
     PowerMockito.when(Translators.translate(SONG_BO)).thenCallRealMethod();
 
-    libraryService.add(SONG_UUID.toString(), SESSION_TOKEN.toString(), ContentType.SONG.value);
+    libraryServiceImpl.add(SONG_UUID.toString(), SESSION_TOKEN.toString(), ContentType.SONG.value);
     verify(cassandraAccountService, times(1)).addOrUpdateSongsByUser(anyObject());
   }
 
   @Test(expected = RuntimeException.class)
   public void addArtistTestEmptyArtist() {
-    when(libraryServiceHelper.getArtist(ARTIST_UUID)).thenReturn(Optional.absent());
+    when(libraryServiceHelperImpl.getArtist(ARTIST_UUID)).thenReturn(Optional.absent());
 
-    libraryService.add(ARTIST_UUID.toString(), SESSION_TOKEN.toString(), ContentType.ARTIST.value);
+    libraryServiceImpl.add(ARTIST_UUID.toString(), SESSION_TOKEN.toString(),
+        ContentType.ARTIST.value);
   }
 
   @Test(expected = RuntimeException.class)
   public void addAlbumTestEmptyAlbum() {
-    when(libraryServiceHelper.getAlbum(ALBUM_UUID)).thenReturn(Optional.absent());
+    when(libraryServiceHelperImpl.getAlbum(ALBUM_UUID)).thenReturn(Optional.absent());
 
-    libraryService.add(ALBUM_UUID.toString(), SESSION_TOKEN.toString(), ContentType.ALBUM.value);
+    libraryServiceImpl
+        .add(ALBUM_UUID.toString(), SESSION_TOKEN.toString(), ContentType.ALBUM.value);
   }
 
   @Test(expected = RuntimeException.class)
   public void addSongTestEmptySong() {
-    when(libraryServiceHelper.getSong(SONG_UUID)).thenReturn(Optional.absent());
+    when(libraryServiceHelperImpl.getSong(SONG_UUID)).thenReturn(Optional.absent());
 
-    libraryService.add(SONG_UUID.toString(), SESSION_TOKEN.toString(), ContentType.SONG.value);
+    libraryServiceImpl.add(SONG_UUID.toString(), SESSION_TOKEN.toString(), ContentType.SONG.value);
   }
 
   private void mockGetMyLibraryAlbums() {

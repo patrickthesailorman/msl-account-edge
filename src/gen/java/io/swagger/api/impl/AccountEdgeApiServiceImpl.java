@@ -4,10 +4,13 @@ import com.google.common.base.Optional;
 import com.kenzan.msl.account.client.dto.UserDto;
 import com.kenzan.msl.account.client.services.CassandraAccountService;
 import com.kenzan.msl.account.edge.Main;
-import com.kenzan.msl.account.edge.services.AccountEdgeService;
 import com.kenzan.msl.account.edge.services.LibraryService;
 import com.kenzan.msl.account.edge.services.LibraryServiceHelper;
-import com.kenzan.msl.account.edge.services.RatingsHelper;
+import com.kenzan.msl.account.edge.services.RatingsService;
+import com.kenzan.msl.account.edge.services.impl.AccountEdgeServiceImpl;
+import com.kenzan.msl.account.edge.services.impl.LibraryServiceImpl;
+import com.kenzan.msl.account.edge.services.impl.LibraryServiceHelperImpl;
+import com.kenzan.msl.account.edge.services.impl.RatingsServiceImpl;
 import com.kenzan.msl.catalog.client.services.CassandraCatalogService;
 import com.kenzan.msl.ratings.client.services.CassandraRatingsService;
 import io.swagger.api.*;
@@ -35,11 +38,11 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
   private final CassandraRatingsService cassandraRatingsService = CassandraRatingsService
     .getInstance(Optional.fromNullable(Main.archaiusProperties));
 
-  private final RatingsHelper ratingsHelper = new RatingsHelper(cassandraRatingsService);
-  private final LibraryServiceHelper libraryServiceHelper = new LibraryServiceHelper(cassandraCatalogService);
-  private final LibraryService libraryService = new LibraryService(cassandraAccountService, libraryServiceHelper, ratingsHelper);
+  private final LibraryServiceHelper libraryServiceHelper = new LibraryServiceHelperImpl(cassandraCatalogService);
+  private final RatingsService ratingsService = new RatingsServiceImpl(cassandraRatingsService);
+  private final LibraryService libraryService = new LibraryServiceImpl(cassandraAccountService, libraryServiceHelper, ratingsService);
 
-    private AccountEdgeService accountService = new AccountEdgeService(
+    private AccountEdgeServiceImpl accountService = new AccountEdgeServiceImpl(
       libraryService,
       cassandraAccountService
     );

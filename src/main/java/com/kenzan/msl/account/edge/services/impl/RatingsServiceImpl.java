@@ -1,6 +1,7 @@
-package com.kenzan.msl.account.edge.services;
+package com.kenzan.msl.account.edge.services.impl;
 
 import com.google.common.base.Optional;
+import com.kenzan.msl.account.edge.services.RatingsService;
 import com.kenzan.msl.common.ContentType;
 import com.kenzan.msl.ratings.client.dto.AverageRatingsDto;
 import com.kenzan.msl.ratings.client.dto.UserRatingsDto;
@@ -12,7 +13,7 @@ import io.swagger.model.SongInfo;
 import java.util.List;
 import java.util.UUID;
 
-public class RatingsHelper {
+public class RatingsServiceImpl implements RatingsService {
 
   private final CassandraRatingsService cassandraRatingsService;
 
@@ -21,7 +22,7 @@ public class RatingsHelper {
    *
    * @param cassandraRatingsService com.kenzan.msl.ratings.client.services.CassandraRatingsService
    */
-  public RatingsHelper(final CassandraRatingsService cassandraRatingsService) {
+  public RatingsServiceImpl(final CassandraRatingsService cassandraRatingsService) {
     this.cassandraRatingsService = cassandraRatingsService;
   }
 
@@ -31,6 +32,7 @@ public class RatingsHelper {
    * @param albumList List&lt;AlbumInfo&gt;
    * @param userUuid java.util.UUID
    */
+  @Override
   public void processAlbumRatings(List<AlbumInfo> albumList, UUID userUuid) {
     for (AlbumInfo albumInfo : albumList) {
       Optional<AverageRatingsDto> averageRatingsDto =
@@ -61,6 +63,7 @@ public class RatingsHelper {
    * @param artistList List&lt;ArtistInfo&gt;
    * @param userUuid java.util.UUID
    */
+  @Override
   public void processArtistRatings(List<ArtistInfo> artistList, UUID userUuid) {
     for (ArtistInfo artistInfo : artistList) {
       Optional<AverageRatingsDto> averageRatingsDto =
@@ -91,6 +94,7 @@ public class RatingsHelper {
    * @param songList List&lt;SongInfo&gt;
    * @param userUuid java.util.UUID
    */
+  @Override
   public void processSongRatings(List<SongInfo> songList, UUID userUuid) {
     for (SongInfo songInfo : songList) {
       Optional<AverageRatingsDto> averageRatingsDto =
