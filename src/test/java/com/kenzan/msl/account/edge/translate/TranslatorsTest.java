@@ -20,9 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TranslatorsTest {
-
-  private TestConstants tc = TestConstants.getInstance();
+public class TranslatorsTest extends TestConstants {
 
   private AlbumBo albumBo = new AlbumBo();
   private ArtistBo artistBo = new ArtistBo();
@@ -40,14 +38,14 @@ public class TranslatorsTest {
     AlbumsByUserDto model = Translators.translate(albumBo);
 
     assertNotNull(model);
-    assertEquals(model.getAlbumId(), tc.ALBUM_UUID);
-    assertEquals(model.getAlbumName(), tc.ALBUM_NAME);
-    assertEquals(model.getAlbumYear(), tc.ALBUM_YEAR);
-    assertEquals(model.getArtistId(), tc.ARTIST_UUID);
-    assertEquals(model.getArtistMbid(), tc.ARTIST_MBID);
-    assertEquals(model.getArtistName(), tc.ARTIST_NAME);
+    assertEquals(model.getAlbumId(), ALBUM_UUID);
+    assertEquals(model.getAlbumName(), ALBUM_NAME);
+    assertEquals(model.getAlbumYear(), ALBUM_YEAR);
+    assertEquals(model.getArtistId(), ARTIST_UUID);
+    assertEquals(model.getArtistMbid(), ARTIST_MBID);
+    assertEquals(model.getArtistName(), ARTIST_NAME);
     assertEquals(model.getContentType(), "Album");
-    assertEquals(model.getFavoritesTimestamp(), tc.FAVORITES_TIMESTAMP);
+    assertEquals(model.getFavoritesTimestamp(), FAVORITES_TIMESTAMP);
   }
 
   @Test
@@ -79,11 +77,11 @@ public class TranslatorsTest {
     ArtistsByUserDto model = Translators.translate(artistBo);
 
     assertNotNull(model);
-    assertEquals(model.getArtistId(), tc.ARTIST_UUID);
-    assertEquals(model.getArtistMbid(), tc.ARTIST_MBID);
-    assertEquals(model.getArtistName(), tc.ARTIST_NAME);
+    assertEquals(model.getArtistId(), ARTIST_UUID);
+    assertEquals(model.getArtistMbid(), ARTIST_MBID);
+    assertEquals(model.getArtistName(), ARTIST_NAME);
     assertEquals(model.getContentType(), "Artist");
-    assertEquals(model.getFavoritesTimestamp(), tc.FAVORITES_TIMESTAMP);
+    assertEquals(model.getFavoritesTimestamp(), FAVORITES_TIMESTAMP);
   }
 
   @Test
@@ -113,19 +111,19 @@ public class TranslatorsTest {
 
     assertNotNull(model);
 
-    assertEquals(model.getSongId(), tc.SONG_UUID);
-    assertEquals(model.getSongName(), tc.SONG_NAME);
-    assertEquals(model.getSongDuration(), tc.SONG_DURATION);
+    assertEquals(model.getSongId(), SONG_UUID);
+    assertEquals(model.getSongName(), SONG_NAME);
+    assertEquals(model.getSongDuration(), SONG_DURATION);
 
-    assertEquals(model.getArtistId(), tc.ARTIST_UUID);
-    assertEquals(model.getArtistName(), tc.ARTIST_NAME);
-    assertEquals(model.getArtistMbid(), tc.ARTIST_MBID);
+    assertEquals(model.getArtistId(), ARTIST_UUID);
+    assertEquals(model.getArtistName(), ARTIST_NAME);
+    assertEquals(model.getArtistMbid(), ARTIST_MBID);
 
-    assertEquals(model.getAlbumId(), tc.ALBUM_UUID);
-    assertEquals(model.getAlbumName(), tc.ALBUM_NAME);
-    assertEquals(model.getAlbumYear(), tc.SONG_YEAR);
+    assertEquals(model.getAlbumId(), ALBUM_UUID);
+    assertEquals(model.getAlbumName(), ALBUM_NAME);
+    assertEquals(model.getAlbumYear(), SONG_YEAR);
 
-    assertEquals(model.getFavoritesTimestamp(), tc.FAVORITES_TIMESTAMP);
+    assertEquals(model.getFavoritesTimestamp(), FAVORITES_TIMESTAMP);
   }
 
   @Test
@@ -152,32 +150,32 @@ public class TranslatorsTest {
   }
 
   private void initAlbumBo() {
-    albumBo.setAlbumId(tc.ALBUM_UUID);
-    albumBo.setAlbumName(tc.ALBUM_NAME);
-    albumBo.setYear(tc.ALBUM_YEAR);
-    albumBo.setArtistId(tc.ARTIST_UUID);
-    albumBo.setArtistName(tc.ARTIST_NAME);
-    albumBo.setArtistMbid(tc.ARTIST_MBID);
-    albumBo.setFavoritesTimestamp(Long.toString(tc.FAVORITES_TIMESTAMP.getTime()));
+    albumBo.setAlbumId(ALBUM_UUID);
+    albumBo.setAlbumName(ALBUM_NAME);
+    albumBo.setYear(ALBUM_YEAR);
+    albumBo.setArtistId(ARTIST_UUID);
+    albumBo.setArtistName(ARTIST_NAME);
+    albumBo.setArtistMbid(ARTIST_MBID);
+    albumBo.setFavoritesTimestamp(Long.toString(FAVORITES_TIMESTAMP.getTime()));
   }
 
   private void initArtistBo() {
-    artistBo.setArtistId(tc.ARTIST_UUID);
-    artistBo.setArtistName(tc.ARTIST_NAME);
-    artistBo.setArtistMbid(tc.ARTIST_MBID);
-    artistBo.setFavoritesTimestamp(Long.toString(tc.FAVORITES_TIMESTAMP.getTime()));
+    artistBo.setArtistId(ARTIST_UUID);
+    artistBo.setArtistName(ARTIST_NAME);
+    artistBo.setArtistMbid(ARTIST_MBID);
+    artistBo.setFavoritesTimestamp(Long.toString(FAVORITES_TIMESTAMP.getTime()));
   }
 
   private void initSongBo() {
-    songBo.setSongId(tc.SONG_UUID);
-    songBo.setSongName(tc.SONG_NAME);
-    songBo.setDuration(tc.SONG_DURATION);
-    songBo.setYear(tc.SONG_YEAR);
-    songBo.setArtistId(tc.ARTIST_UUID);
-    songBo.setArtistName(tc.ARTIST_NAME);
-    songBo.setAlbumId(tc.ALBUM_UUID);
-    songBo.setAlbumName(tc.ALBUM_NAME);
-    songBo.setArtistMbid(tc.ARTIST_MBID);
-    songBo.setFavoritesTimestamp(Long.toString(tc.FAVORITES_TIMESTAMP.getTime()));
+    songBo.setSongId(SONG_UUID);
+    songBo.setSongName(SONG_NAME);
+    songBo.setDuration(SONG_DURATION);
+    songBo.setYear(SONG_YEAR);
+    songBo.setArtistId(ARTIST_UUID);
+    songBo.setArtistName(ARTIST_NAME);
+    songBo.setAlbumId(ALBUM_UUID);
+    songBo.setAlbumName(ALBUM_NAME);
+    songBo.setArtistMbid(ARTIST_MBID);
+    songBo.setFavoritesTimestamp(Long.toString(FAVORITES_TIMESTAMP.getTime()));
   }
 }

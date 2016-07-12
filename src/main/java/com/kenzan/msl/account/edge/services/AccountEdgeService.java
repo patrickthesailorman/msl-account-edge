@@ -4,81 +4,44 @@
 package com.kenzan.msl.account.edge.services;
 
 import com.kenzan.msl.account.client.dto.UserDto;
-import com.kenzan.msl.account.client.services.CassandraAccountService;
 import io.swagger.model.MyLibrary;
 import rx.Observable;
 
-import java.util.UUID;
-
-/**
- * Implementation of the AccountEdge interface that retrieves its data from a Cassandra cluster.
- */
-public class AccountEdgeService implements AccountEdge {
-
-  private LibraryService libraryService;
-  private CassandraAccountService cassandraAccountService;
-
-  public AccountEdgeService(LibraryService _libraryService) {
-    cassandraAccountService = CassandraAccountService.getInstance();
-    libraryService = _libraryService;
-  }
+public interface AccountEdgeService {
 
   /**
    * Registers a user
    *
-   * @param user UserDto
+   * @param user userDto
    * @return Observable&lt;Void&gt;
    */
-  public Observable<Void> registerUser(UserDto user) {
-    Observable<UserDto> userResults = cassandraAccountService.getUserByUsername(user.getUsername());
-    if (!userResults.isEmpty().toBlocking().first()) {
-      throw new RuntimeException("User already exists with designated email address");
-    } else {
-      boolean isValidUUID = false;
-      while (!isValidUUID) {
-        isValidUUID =
-            cassandraAccountService.getUserByUUID(user.getUserId()).isEmpty().toBlocking().first();
-      }
-      cassandraAccountService.addOrUpdateUser(user);
-      if (cassandraAccountService.getUserByUsername(user.getUsername()).isEmpty().toBlocking()
-          .first()) {
-        throw new RuntimeException("Unable to create user");
-      }
-    }
-    return Observable.empty();
-  }
+  Observable<Void> registerUser(UserDto user);
 
   /**
-   * Retrieves the user library data
+   * Gets the MyLibrary object
    *
-   * @param sessionToken user uuid
+   * @param sessionToken String
    * @return Observable&lt;MyLibrary&gt;
    */
-  public Observable<MyLibrary> getMyLibrary(String sessionToken) {
-    return Observable.just(libraryService.get(cassandraAccountService, sessionToken));
-  }
+  Observable<MyLibrary> getMyLibrary(String sessionToken);
 
   /**
-   * Adds content on a user library
+   * Add a data to a specific user library
    *
-   * @param object_id album/artist/song uuid
-   * @param sessionToken uuid of user who's library we are adding content on
-   * @param contentType album/artist/song content type
+   * @param id String
+   * @param sessionToken String
+   * @param contentType String
    */
-  public void addToLibrary(String object_id, String sessionToken, String contentType) {
-    libraryService.add(cassandraAccountService, object_id, sessionToken, contentType);
-  }
+  void addToLibrary(String id, String sessionToken, String contentType);
 
   /**
-   * Removes content from a user library
+   * Remove data from a user library
    *
-   * @param object_id album/artist/song uuid
-   * @param timestamp referenced object timestamp
-   * @param sessionToken uuid of user who's library we are adding content on
-   * @param contentType album/artist/song content type
+   * @param object_id String
+   * @param timestamp String
+   * @param sessionToken String
+   * @param contentType String
    */
-  public void removeFromLibrary(String object_id, String timestamp, String sessionToken,
-      String contentType) {
-    libraryService.remove(cassandraAccountService, object_id, timestamp, sessionToken, contentType);
-  }
+  void removeFromLibrary(String object_id, String timestamp, String sessionToken, String contentType);
+
 }

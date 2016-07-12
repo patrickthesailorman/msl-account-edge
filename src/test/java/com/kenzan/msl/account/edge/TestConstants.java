@@ -3,10 +3,13 @@ package com.kenzan.msl.account.edge;
 import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
 import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
 import com.kenzan.msl.account.client.dto.SongsByUserDto;
+import com.kenzan.msl.account.client.dto.UserDto;
 import com.kenzan.msl.catalog.client.dto.AlbumArtistBySongDto;
 import com.kenzan.msl.catalog.client.dto.SongsAlbumsByArtistDto;
 import com.kenzan.msl.catalog.client.dto.SongsArtistByAlbumDto;
+import com.kenzan.msl.common.bo.AlbumBo;
 import com.kenzan.msl.common.bo.ArtistBo;
+import com.kenzan.msl.common.bo.SongBo;
 import com.kenzan.msl.ratings.client.dto.AverageRatingsDto;
 import com.kenzan.msl.ratings.client.dto.UserRatingsDto;
 import io.swagger.model.AlbumInfo;
@@ -22,12 +25,11 @@ import java.util.HashSet;
 
 public class TestConstants {
 
-  private static TestConstants instance = null;
-
   public final UUID ALBUM_UUID = UUID.fromString("00000000-0000-0000-0000-000000001");
   public final UUID ALBUM_UUID_2 = UUID.fromString("00000000-0000-0000-0002-000000011");
   public final String ALBUM_NAME = "AlbumName1";
   public final Integer ALBUM_YEAR = 1971;
+  public final UUID SESSION_TOKEN = UUID.fromString("00000000-0000-0000-0002-000000011");
 
   public final UUID ARTIST_UUID = UUID.fromString("00000000-0000-0000-0001-000000001");
   public final UUID ARTIST_UUID_2 = UUID.fromString("00000000-0000-0000-0002-000000022");
@@ -44,6 +46,8 @@ public class TestConstants {
   public final String IMAGE_LINK = "some link";
   public final Date FAVORITES_TIMESTAMP = new Date();
   public final String GENRE = "someGenre";
+  public final String USERNAME = "username";
+  public final String USER_PASSWORD = "user_password";
 
   public List<AlbumInfo> albumList = new ArrayList<>();
   public List<ArtistInfo> artistList = new ArrayList<>();
@@ -65,11 +69,24 @@ public class TestConstants {
   public AlbumArtistBySongDto albumArtistBySongDto;
 
   public ArtistBo ARTIST_BO;
+  public AlbumBo ALBUM_BO;
+  public SongBo SONG_BO;
+  public UserDto USER_DTO = new UserDto();
 
-  private TestConstants() {
+  public TestConstants() {
+    USER_DTO.setUserId(USER_ID);
+    USER_DTO.setCreationTimestamp(FAVORITES_TIMESTAMP);
+    USER_DTO.setUsername(USERNAME);
+    USER_DTO.setPassword(USER_PASSWORD);
 
     ARTIST_BO = new ArtistBo();
     ARTIST_BO.setArtistId(ARTIST_UUID_2);
+
+    ALBUM_BO = new AlbumBo();
+    ALBUM_BO.setAlbumId(ALBUM_UUID_2);
+
+    SONG_BO = new SongBo();
+    SONG_BO.setSongId(SONG_UUID_2);
 
     ARTISTS_BY_USER_DTO = new ArtistsByUserDto();
     ARTISTS_BY_USER_DTO.setArtistName(ARTIST_NAME);
@@ -157,13 +174,6 @@ public class TestConstants {
     albumArtistBySongDto.setSongDuration(SONG_DURATION);
     albumArtistBySongDto.setAlbumYear(ALBUM_YEAR);
     albumArtistBySongDto.setArtistGenres(genres);
-  }
-
-  public static TestConstants getInstance() {
-    if (instance == null) {
-      instance = new TestConstants();
-    }
-    return instance;
   }
 
 }
