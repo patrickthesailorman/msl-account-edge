@@ -21,11 +21,6 @@ public class ClientConstants {
   private static ClientConstants instance = null;
 
   private ClientConstants() {
-    String configUrl = "file://" + System.getProperty("user.dir");
-    configUrl += "/../msl-account-edge-config/edge-config.properties";
-    String additionalUrlsProperty = "archaius.configurationSource.additionalUrls";
-    System.setProperty(additionalUrlsProperty, configUrl);
-
     DynamicPropertyFactory propertyFactory = DynamicPropertyFactory.getInstance();
     DynamicStringProperty baseURL = propertyFactory.getStringProperty("base_url", DEFAULT_BASE_URL);
     BASE_URL = baseURL.getValue();

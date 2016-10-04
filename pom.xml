@@ -144,6 +144,17 @@
                                 <idleTimeout>60000</idleTimeout>
                             </httpConnector>
                             <webXml>override-web.xml</webXml>
+                            <systemProperties>
+                              <systemProperty>
+                                <name>archaius.configurationSource.additionalUrls</name>
+                                <value>
+                                  ${catalog.data.client.config},
+                                  ${ratings.data.client.config},
+                                  ${account.data.client.config},
+                                  ${account.edge.config}
+                                </value>
+                              </systemProperty>
+                            </systemProperties>
                         </configuration>
                         <executions>
                             <execution>
@@ -694,6 +705,11 @@
         <karyon-governator.version>1.9.3</karyon-governator.version>
 
         <msl-server.version>1.1.0</msl-server.version>
+
+        <catalog.data.client.config>file:../msl-catalog-data-client-config/data-client-config.properties</catalog.data.client.config>
+        <ratings.data.client.config>file:../msl-ratings-data-client-config/data-client-config.properties</ratings.data.client.config>
+        <account.data.client.config>file:../msl-account-data-client-config/data-client-config.properties</account.data.client.config>
+        <account.edge.config>file:../msl-account-edge-config/edge-config.properties</account.edge.config>
     </properties>
 
 </project>
