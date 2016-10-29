@@ -27,7 +27,7 @@ mvn -P dev clean jetty:run
 To verify that the server is running, first log in (see [msl-login-edge](https://github.com/kenzanmedia/msl-login-edge/)), and then access the following endpoint:
 
 ```
-curl 'http://msl.kenzanlabs.com:9002/account-edge/users/mylibrary' -H 'Pragma: no-cache' -H 'Origin: http://msl.kenzanlabs.com:3000' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: en,es;q=0.8,pt-BR;q=0.6,pt;q=0.4' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36' -H 'Accept: application/json, text/plain, */*' -H 'Referer: http://msl.kenzanlabs.com:3000/' -H 'Cookie: sessionToken=b6ee05ed-47a0-4c9e-97a5-93b37eeb645e; authenticated=Thu%20Mar%2031%2014%3A12%3A26%20CST%202016' -H 'Connection: keep-alive' -H 'Cache-Control: no-cache' --compressed
+curl 'http://localhost:9002/account-edge/users/mylibrary' -H 'Pragma: no-cache' -H 'Origin: http://localhost:3000' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: en,es;q=0.8,pt-BR;q=0.6,pt;q=0.4' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36' -H 'Accept: application/json, text/plain, */*' -H 'Referer: http://localhost:3000/' -H 'Cookie: sessionToken=b6ee05ed-47a0-4c9e-97a5-93b37eeb645e; authenticated=Thu%20Mar%2031%2014%3A12%3A26%20CST%202016' -H 'Connection: keep-alive' -H 'Cache-Control: no-cache' --compressed
 ```
 
 ## Code Formatting

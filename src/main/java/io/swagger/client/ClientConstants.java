@@ -8,7 +8,7 @@ import com.netflix.config.DynamicStringProperty;
 
 public class ClientConstants {
 
-  private static final String DEFAULT_BASE_URL = "http://msl.kenzanlabs.com:9002";
+  private static final String DEFAULT_BASE_URL = "http://localhost:9002";
 
   public static String BASE_URL;
 
