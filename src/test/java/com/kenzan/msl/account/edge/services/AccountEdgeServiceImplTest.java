@@ -1,6 +1,6 @@
 package com.kenzan.msl.account.edge.services;
 
-import com.kenzan.msl.account.client.services.CassandraAccountService;
+import com.kenzan.msl.account.client.services.AccountDataClientService;
 import com.kenzan.msl.account.edge.TestConstants;
 import com.kenzan.msl.account.edge.services.impl.AccountEdgeServiceImpl;
 import com.kenzan.msl.account.edge.services.impl.LibraryServiceImpl;
@@ -29,39 +29,39 @@ public class AccountEdgeServiceImplTest extends TestConstants {
   private LibraryServiceImpl libraryServiceImpl;
 
   @Mock
-  private CassandraAccountService cassandraAccountService;
+  private AccountDataClientService accountDataClientService;
 
   @InjectMocks
   private AccountEdgeServiceImpl accountEdgeServiceImpl;
 
   @Test
   public void registerUserTest() {
-    when(cassandraAccountService.getUserByUsername(USER_DTO.getUsername())).thenReturn(
+    when(accountDataClientService.getUserByUsername(USER_DTO.getUsername())).thenReturn(
         Observable.empty()).thenReturn(Observable.just(USER_DTO));
-    when(cassandraAccountService.getUserByUUID(USER_DTO.getUserId()))
-        .thenReturn(Observable.empty());
+    when(accountDataClientService.getUserByUUID(USER_DTO.getUserId())).thenReturn(
+        Observable.empty());
 
     Observable<Void> response = accountEdgeServiceImpl.registerUser(USER_DTO);
-    verify(cassandraAccountService, times(1)).addOrUpdateUser(USER_DTO);
+    verify(accountDataClientService, times(1)).addOrUpdateUser(USER_DTO);
     assertTrue(response.isEmpty().toBlocking().first());
   }
 
   @Test(expected = RuntimeException.class)
   public void registerUserTestEmptyUser() {
-    when(cassandraAccountService.getUserByUsername(USER_DTO.getUsername())).thenReturn(
+    when(accountDataClientService.getUserByUsername(USER_DTO.getUsername())).thenReturn(
         Observable.empty());
     accountEdgeServiceImpl.registerUser(USER_DTO);
   }
 
   @Test(expected = RuntimeException.class)
   public void registerUserTestUnableToAdd() {
-    when(cassandraAccountService.getUserByUsername(USER_DTO.getUsername())).thenReturn(
+    when(accountDataClientService.getUserByUsername(USER_DTO.getUsername())).thenReturn(
         Observable.empty()).thenReturn(Observable.empty());
-    when(cassandraAccountService.getUserByUUID(USER_DTO.getUserId()))
-        .thenReturn(Observable.empty());
+    when(accountDataClientService.getUserByUUID(USER_DTO.getUserId())).thenReturn(
+        Observable.empty());
 
     accountEdgeServiceImpl.registerUser(USER_DTO);
-    verify(cassandraAccountService, times(1)).addOrUpdateUser(USER_DTO);
+    verify(accountDataClientService, times(1)).addOrUpdateUser(USER_DTO);
   }
 
   @Test

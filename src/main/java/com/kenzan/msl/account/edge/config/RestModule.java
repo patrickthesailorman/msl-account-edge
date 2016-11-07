@@ -1,0 +1,30 @@
+package com.kenzan.msl.account.edge.config;
+
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import com.google.inject.Scopes;
+import com.sun.jersey.api.core.PackagesResourceConfig;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.sun.jersey.guice.JerseyServletModule;
+import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import io.swagger.api.AccountEdgeApi;
+
+/**
+ * @author Kenzan
+ */
+public class RestModule extends JerseyServletModule {
+
+  @Override
+  protected void configureServlets() {
+    bind(AccountEdgeApi.class);
+
+    Map<String, String> initParams = new HashMap<String, String>();
+    initParams.put(PackagesResourceConfig.PROPERTY_PACKAGES, "io.swagger.api");
+    bind(JacksonJaxbJsonProvider.class).in(Scopes.SINGLETON);
+
+    serve("/*").with(GuiceContainer.class, initParams);
+  }
+
+}

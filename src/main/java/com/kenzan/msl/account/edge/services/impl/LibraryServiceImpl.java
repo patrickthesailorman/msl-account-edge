@@ -6,10 +6,11 @@ package com.kenzan.msl.account.edge.services.impl;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
 import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
 import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
 import com.kenzan.msl.account.client.dto.SongsByUserDto;
-import com.kenzan.msl.account.client.services.CassandraAccountService;
+import com.kenzan.msl.account.client.services.AccountDataClientService;
 import com.kenzan.msl.account.edge.services.LibraryService;
 import com.kenzan.msl.account.edge.services.LibraryServiceHelper;
 import com.kenzan.msl.account.edge.services.RatingsService;
@@ -31,20 +32,21 @@ import java.util.UUID;
 
 public class LibraryServiceImpl implements LibraryService {
 
-  private final CassandraAccountService cassandraAccountService;
+  private final AccountDataClientService accountDataClientService;
   private final LibraryServiceHelper libraryServiceHelper;
   private final RatingsService ratingsService;
 
   /**
    * Constructor
    *
-   * @param cassandraAccountService com.kenzan.msl.account.client.services.CassandraAccountService
+   * @param accountDataClientService com.kenzan.msl.account.client.services.AccountDataClientService
    * @param libraryServiceHelper com.kenzan.msl.catalog.client.services.LibraryServiceHelper
    * @param ratingsService com.kenzan.msl.account.edge.services.impl.RatingsServiceImpl
    */
-  public LibraryServiceImpl(final CassandraAccountService cassandraAccountService,
+  @Inject
+  public LibraryServiceImpl(final AccountDataClientService accountDataClientService,
       final LibraryServiceHelper libraryServiceHelper, final RatingsService ratingsService) {
-    this.cassandraAccountService = cassandraAccountService;
+    this.accountDataClientService = accountDataClientService;
     this.libraryServiceHelper = libraryServiceHelper;
     this.ratingsService = ratingsService;
   }
@@ -93,7 +95,7 @@ public class LibraryServiceImpl implements LibraryService {
           try {
             ArtistsByUserDto optArtistDto = Translators.translate(optArtistBo.get());
             optArtistDto.setUserId(UUID.fromString(sessionToken));
-            cassandraAccountService.addOrUpdateArtistsByUser(optArtistDto);
+            accountDataClientService.addOrUpdateArtistsByUser(optArtistDto);
           } catch (Exception error) {
             throw error;
           }
@@ -108,7 +110,7 @@ public class LibraryServiceImpl implements LibraryService {
           try {
             AlbumsByUserDto optAlbumDto = Translators.translate(optAlbumBo.get());
             optAlbumDto.setUserId(UUID.fromString(sessionToken));
-            cassandraAccountService.addOrUpdateAlbumsByUser(optAlbumDto);
+            accountDataClientService.addOrUpdateAlbumsByUser(optAlbumDto);
           } catch (Exception error) {
             throw error;
           }
@@ -123,7 +125,7 @@ public class LibraryServiceImpl implements LibraryService {
           try {
             SongsByUserDto optSongDto = Translators.translate(optSongBo.get());
             optSongDto.setUserId(UUID.fromString(sessionToken));
-            cassandraAccountService.addOrUpdateSongsByUser(optSongDto);
+            accountDataClientService.addOrUpdateSongsByUser(optSongDto);
           } catch (Exception error) {
             throw error;
           }
@@ -150,7 +152,7 @@ public class LibraryServiceImpl implements LibraryService {
       case "Song":
         try {
           int initialSongsOnLibrary = getMyLibrarySongs(sessionToken).size();
-          cassandraAccountService.deleteSongsByUser(UUID.fromString(sessionToken),
+          accountDataClientService.deleteSongsByUser(UUID.fromString(sessionToken),
               favoritesTimestamp, UUID.fromString(id));
           int postSongsOnLibrary = getMyLibrarySongs(sessionToken).size();
           if (initialSongsOnLibrary <= postSongsOnLibrary) {
@@ -163,7 +165,7 @@ public class LibraryServiceImpl implements LibraryService {
       case "Artist":
         try {
           int initialArtistsOnLibrary = getMyLibraryArtists(sessionToken).size();
-          cassandraAccountService.deleteArtistsByUser(UUID.fromString(sessionToken),
+          accountDataClientService.deleteArtistsByUser(UUID.fromString(sessionToken),
               favoritesTimestamp, UUID.fromString(id));
           int postArtistsOnLibrary = getMyLibraryArtists(sessionToken).size();
           if (initialArtistsOnLibrary <= postArtistsOnLibrary) {
@@ -176,7 +178,7 @@ public class LibraryServiceImpl implements LibraryService {
       case "Album":
         try {
           int initialAlbumsOnLibrary = getMyLibraryAlbums(sessionToken).size();
-          cassandraAccountService.deleteAlbumsByUser(UUID.fromString(sessionToken),
+          accountDataClientService.deleteAlbumsByUser(UUID.fromString(sessionToken),
               favoritesTimestamp, UUID.fromString(id));
           int postAlbumsOnLibrary = getMyLibraryAlbums(sessionToken).size();
           if (initialAlbumsOnLibrary <= postAlbumsOnLibrary) {
@@ -197,11 +199,11 @@ public class LibraryServiceImpl implements LibraryService {
    */
   private List<AlbumInfo> getMyLibraryAlbums(final String uuid) {
     Observable<ResultSet> results =
-        cassandraAccountService.getAlbumsByUser(UUID.fromString(uuid), Optional.absent(),
+        accountDataClientService.getAlbumsByUser(UUID.fromString(uuid), Optional.absent(),
             Optional.absent());
 
     Result<AlbumsByUserDto> mappedResults =
-        cassandraAccountService.mapAlbumsByUser(results).toBlocking().first();
+        accountDataClientService.mapAlbumsByUser(results).toBlocking().first();
 
     return Translators.translateAlbumsByUserDto(mappedResults);
   }
@@ -215,11 +217,11 @@ public class LibraryServiceImpl implements LibraryService {
   private List<ArtistInfo> getMyLibraryArtists(final String uuid) {
 
     Observable<ResultSet> results =
-        cassandraAccountService.getArtistsByUser(UUID.fromString(uuid), Optional.absent(),
+        accountDataClientService.getArtistsByUser(UUID.fromString(uuid), Optional.absent(),
             Optional.absent());
 
     Result<ArtistsByUserDto> mappedResults =
-        cassandraAccountService.mapArtistByUser(results).toBlocking().first();
+        accountDataClientService.mapArtistByUser(results).toBlocking().first();
 
     return Translators.translateArtistByUserDto(mappedResults);
   }
@@ -233,11 +235,11 @@ public class LibraryServiceImpl implements LibraryService {
   private List<SongInfo> getMyLibrarySongs(final String uuid) {
 
     Observable<ResultSet> results =
-        cassandraAccountService.getSongsByUser(UUID.fromString(uuid), Optional.absent(),
+        accountDataClientService.getSongsByUser(UUID.fromString(uuid), Optional.absent(),
             Optional.absent());
 
     Result<SongsByUserDto> mappedResults =
-        cassandraAccountService.mapSongsByUser(results).toBlocking().first();
+        accountDataClientService.mapSongsByUser(results).toBlocking().first();
 
     return Translators.translateSongsByUserDto(mappedResults);
   }

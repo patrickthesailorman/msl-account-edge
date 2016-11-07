@@ -1,6 +1,11 @@
 package com.kenzan.msl.account.edge;
 
-import com.google.common.base.Optional;
+import com.google.inject.Injector;
+import com.kenzan.msl.account.client.config.AccountDataClientModule;
+import com.kenzan.msl.account.edge.config.AccountEdgeModule;
+import com.kenzan.msl.account.edge.config.RestModule;
+import com.netflix.governator.guice.LifecycleInjector;
+import com.netflix.governator.lifecycle.LifecycleManager;
 import io.swagger.api.AccountEdgeApi;
 import io.swagger.api.impl.AccountEdgeApiOriginFilter;
 import org.eclipse.jetty.server.Server;
@@ -8,29 +13,11 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 
-import com.netflix.governator.annotations.Modules;
-import netflix.karyon.KaryonBootstrap;
-import netflix.karyon.archaius.ArchaiusBootstrap;
-import netflix.karyon.ShutdownModule;
-import netflix.karyon.servo.KaryonServoModule;
-
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
-import java.util.HashMap;
 
-import netflix.adminresources.resources.KaryonWebAdminModule;
 
-// import netflix.karyon.jersey.blocking.KaryonJerseyModule;
-
-@ArchaiusBootstrap
-@KaryonBootstrap(name = "msl-account-edge")
-@Modules(include = {ShutdownModule.class, KaryonWebAdminModule.class, // Uncomment this to enable
-                                                                      // WebAdmin
-    // KaryonEurekaModule.class, // Uncomment this to enable Eureka client.
-    KaryonServoModule.class})
 public class Main {
-
-  public static HashMap archaiusProperties = new HashMap<String, Optional<String>>();
 
   /**
    * Runs jetty server to expose jersey API
@@ -40,10 +27,11 @@ public class Main {
    */
   public static void main(String[] args) throws Exception {
 
-    archaiusProperties.put("region",
-        Optional.fromNullable(System.getProperty("archaius.deployment.region")));
-    archaiusProperties.put("domainName",
-        Optional.fromNullable(System.getProperty("archaius.deployment.domainName")));
+    Injector injector =
+        LifecycleInjector.builder()
+            .withModules(new RestModule(), new AccountDataClientModule(), new AccountEdgeModule())
+            .build().createInjector();
+    LifecycleManager manager = injector.getInstance(LifecycleManager.class);
 
     Server jettyServer = new Server(9002);
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -58,11 +46,12 @@ public class Main {
         AccountEdgeApi.class.getCanonicalName());
 
     try {
-
+      manager.start();
       jettyServer.start();
       jettyServer.join();
 
     } finally {
+      manager.close();
       jettyServer.destroy();
     }
   }

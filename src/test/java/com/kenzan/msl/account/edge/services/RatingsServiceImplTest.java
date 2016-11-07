@@ -7,7 +7,7 @@ import com.google.common.base.Optional;
 import com.kenzan.msl.account.edge.TestConstants;
 import com.kenzan.msl.account.edge.services.impl.RatingsServiceImpl;
 import com.kenzan.msl.common.ContentType;
-import com.kenzan.msl.ratings.client.services.CassandraRatingsService;
+import com.kenzan.msl.ratings.client.services.RatingsDataClientService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class RatingsServiceImplTest extends TestConstants {
 
   @Mock
-  private CassandraRatingsService cassandraRatingsService;
+  private RatingsDataClientService cassandraRatingsService;
 
   @InjectMocks
   private RatingsServiceImpl ratingsServiceImpl;

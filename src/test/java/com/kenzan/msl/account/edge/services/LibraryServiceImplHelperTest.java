@@ -11,7 +11,7 @@ import com.kenzan.msl.account.edge.services.impl.LibraryServiceHelperImpl;
 import com.kenzan.msl.catalog.client.dto.AlbumArtistBySongDto;
 import com.kenzan.msl.catalog.client.dto.SongsAlbumsByArtistDto;
 import com.kenzan.msl.catalog.client.dto.SongsArtistByAlbumDto;
-import com.kenzan.msl.catalog.client.services.CassandraCatalogService;
+import com.kenzan.msl.catalog.client.services.CatalogDataClientService;
 import com.kenzan.msl.common.bo.AlbumBo;
 import com.kenzan.msl.common.bo.ArtistBo;
 import com.kenzan.msl.common.bo.SongBo;
@@ -44,16 +44,16 @@ public class LibraryServiceImplHelperTest extends TestConstants {
   private Result<AlbumArtistBySongDto> albumArtistBySongDtoResult;
 
   @Mock
-  private CassandraCatalogService cassandraCatalogService;
+  private CatalogDataClientService catalogDataClientService;
 
   @InjectMocks
   private LibraryServiceHelperImpl libraryServiceHelperImpl;
 
   @Test
   public void getArtistTest() {
-    when(cassandraCatalogService.getSongsAlbumsByArtist(ARTIST_UUID, Optional.absent()))
+    when(catalogDataClientService.getSongsAlbumsByArtist(ARTIST_UUID, Optional.absent()))
         .thenReturn(Observable.just(resultSet));
-    when(cassandraCatalogService.mapSongsAlbumsByArtist(anyObject())).thenReturn(
+    when(catalogDataClientService.mapSongsAlbumsByArtist(anyObject())).thenReturn(
         Observable.just(songsAlbumsByArtistDtoResult));
     when(songsAlbumsByArtistDtoResult.one()).thenReturn(songsAlbumsByArtistDto);
     Optional<ArtistBo> results = libraryServiceHelperImpl.getArtist(ARTIST_UUID);
@@ -65,9 +65,9 @@ public class LibraryServiceImplHelperTest extends TestConstants {
 
   @Test
   public void getArtistTestEmptyMapping() {
-    when(cassandraCatalogService.getSongsAlbumsByArtist(ARTIST_UUID, Optional.absent()))
+    when(catalogDataClientService.getSongsAlbumsByArtist(ARTIST_UUID, Optional.absent()))
         .thenReturn(Observable.just(resultSet));
-    when(cassandraCatalogService.mapSongsAlbumsByArtist(anyObject())).thenReturn(
+    when(catalogDataClientService.mapSongsAlbumsByArtist(anyObject())).thenReturn(
         Observable.just(null));
     Optional<ArtistBo> results = libraryServiceHelperImpl.getArtist(ARTIST_UUID);
     assertFalse(results.isPresent());
@@ -75,9 +75,9 @@ public class LibraryServiceImplHelperTest extends TestConstants {
 
   @Test
   public void getArtistTestEmptySongsAlbumsByArtistDto() {
-    when(cassandraCatalogService.getSongsAlbumsByArtist(ARTIST_UUID, Optional.absent()))
+    when(catalogDataClientService.getSongsAlbumsByArtist(ARTIST_UUID, Optional.absent()))
         .thenReturn(Observable.just(resultSet));
-    when(cassandraCatalogService.mapSongsAlbumsByArtist(anyObject())).thenReturn(
+    when(catalogDataClientService.mapSongsAlbumsByArtist(anyObject())).thenReturn(
         Observable.just(songsAlbumsByArtistDtoResult));
     when(songsAlbumsByArtistDtoResult.one()).thenReturn(null);
     Optional<ArtistBo> results = libraryServiceHelperImpl.getArtist(ARTIST_UUID);
@@ -86,9 +86,9 @@ public class LibraryServiceImplHelperTest extends TestConstants {
 
   @Test
   public void getAlbumTest() {
-    when(cassandraCatalogService.getSongsArtistByAlbum(ALBUM_UUID, Optional.absent())).thenReturn(
+    when(catalogDataClientService.getSongsArtistByAlbum(ALBUM_UUID, Optional.absent())).thenReturn(
         Observable.just(resultSet));
-    when(cassandraCatalogService.mapSongsArtistByAlbum(anyObject())).thenReturn(
+    when(catalogDataClientService.mapSongsArtistByAlbum(anyObject())).thenReturn(
         Observable.just(songsArtistByAlbumDtoResult));
     when(songsArtistByAlbumDtoResult.one()).thenReturn(songsArtistByAlbumDto);
     Optional<AlbumBo> results = libraryServiceHelperImpl.getAlbum(ALBUM_UUID);
@@ -102,9 +102,9 @@ public class LibraryServiceImplHelperTest extends TestConstants {
 
   @Test
   public void getAlbumTestEmptyMappingResults() {
-    when(cassandraCatalogService.getSongsArtistByAlbum(ALBUM_UUID, Optional.absent())).thenReturn(
+    when(catalogDataClientService.getSongsArtistByAlbum(ALBUM_UUID, Optional.absent())).thenReturn(
         Observable.just(resultSet));
-    when(cassandraCatalogService.mapSongsArtistByAlbum(anyObject())).thenReturn(
+    when(catalogDataClientService.mapSongsArtistByAlbum(anyObject())).thenReturn(
         Observable.just(null));
     Optional<AlbumBo> results = libraryServiceHelperImpl.getAlbum(ALBUM_UUID);
     assertFalse(results.isPresent());
@@ -112,9 +112,9 @@ public class LibraryServiceImplHelperTest extends TestConstants {
 
   @Test
   public void getAlbumTestEmptySongsArtistByAlbumDto() {
-    when(cassandraCatalogService.getSongsArtistByAlbum(ALBUM_UUID, Optional.absent())).thenReturn(
+    when(catalogDataClientService.getSongsArtistByAlbum(ALBUM_UUID, Optional.absent())).thenReturn(
         Observable.just(resultSet));
-    when(cassandraCatalogService.mapSongsArtistByAlbum(anyObject())).thenReturn(
+    when(catalogDataClientService.mapSongsArtistByAlbum(anyObject())).thenReturn(
         Observable.just(songsArtistByAlbumDtoResult));
     when(songsArtistByAlbumDtoResult.one()).thenReturn(null);
     Optional<AlbumBo> results = libraryServiceHelperImpl.getAlbum(ALBUM_UUID);
@@ -123,9 +123,9 @@ public class LibraryServiceImplHelperTest extends TestConstants {
 
   @Test
   public void getSongTest() {
-    when(cassandraCatalogService.getAlbumArtistBySong(SONG_UUID, Optional.absent())).thenReturn(
+    when(catalogDataClientService.getAlbumArtistBySong(SONG_UUID, Optional.absent())).thenReturn(
         Observable.just(resultSet));
-    when(cassandraCatalogService.mapAlbumArtistBySong(anyObject())).thenReturn(
+    when(catalogDataClientService.mapAlbumArtistBySong(anyObject())).thenReturn(
         Observable.just(albumArtistBySongDtoResult));
     when(albumArtistBySongDtoResult.one()).thenReturn(albumArtistBySongDto);
 
@@ -144,9 +144,9 @@ public class LibraryServiceImplHelperTest extends TestConstants {
 
   @Test
   public void getSongTestEmptyMappingResults() {
-    when(cassandraCatalogService.getAlbumArtistBySong(SONG_UUID, Optional.absent())).thenReturn(
+    when(catalogDataClientService.getAlbumArtistBySong(SONG_UUID, Optional.absent())).thenReturn(
         Observable.just(resultSet));
-    when(cassandraCatalogService.mapAlbumArtistBySong(anyObject())).thenReturn(
+    when(catalogDataClientService.mapAlbumArtistBySong(anyObject())).thenReturn(
         Observable.just(null));
 
     Optional<SongBo> results = libraryServiceHelperImpl.getSong(SONG_UUID);
@@ -155,9 +155,9 @@ public class LibraryServiceImplHelperTest extends TestConstants {
 
   @Test
   public void getSongTestEmptyAlbumArtistBySongDto() {
-    when(cassandraCatalogService.getAlbumArtistBySong(SONG_UUID, Optional.absent())).thenReturn(
+    when(catalogDataClientService.getAlbumArtistBySong(SONG_UUID, Optional.absent())).thenReturn(
         Observable.just(resultSet));
-    when(cassandraCatalogService.mapAlbumArtistBySong(anyObject())).thenReturn(
+    when(catalogDataClientService.mapAlbumArtistBySong(anyObject())).thenReturn(
         Observable.just(albumArtistBySongDtoResult));
     when(albumArtistBySongDtoResult.one()).thenReturn(null);
 
