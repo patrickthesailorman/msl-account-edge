@@ -3,8 +3,9 @@
  */
 package com.kenzan.msl.account.edge.services.impl;
 
+import com.google.inject.Inject;
 import com.kenzan.msl.account.client.dto.UserDto;
-import com.kenzan.msl.account.client.services.CassandraAccountService;
+import com.kenzan.msl.account.client.services.AccountDataClientService;
 import com.kenzan.msl.account.edge.services.AccountEdgeService;
 import com.kenzan.msl.account.edge.services.LibraryService;
 import io.swagger.model.MyLibrary;
@@ -17,18 +18,19 @@ import rx.Observable;
 public class AccountEdgeServiceImpl implements AccountEdgeService {
 
   private final LibraryService libraryService;
-  private final CassandraAccountService cassandraAccountService;
+  private final AccountDataClientService accountDataClientService;
 
   /**
    * Constructor
    *
    * @param libraryService com.kenzan.msl.account.edge.services LibraryService
-   * @param cassandraAccountService com.kenzan.msl.account.client.services.CassandraAccountService
+   * @param accountDataClientService com.kenzan.msl.account.client.services.AccountDataClientService
    */
+  @Inject
   public AccountEdgeServiceImpl(final LibraryService libraryService,
-      final CassandraAccountService cassandraAccountService) {
+      final AccountDataClientService accountDataClientService) {
     this.libraryService = libraryService;
-    this.cassandraAccountService = cassandraAccountService;
+    this.accountDataClientService = accountDataClientService;
   }
 
   /**
@@ -39,17 +41,18 @@ public class AccountEdgeServiceImpl implements AccountEdgeService {
    */
   @Override
   public Observable<Void> registerUser(UserDto user) {
-    Observable<UserDto> userResults = cassandraAccountService.getUserByUsername(user.getUsername());
+    Observable<UserDto> userResults =
+        accountDataClientService.getUserByUsername(user.getUsername());
     if (!userResults.isEmpty().toBlocking().first()) {
       throw new RuntimeException("User already exists with designated email address");
     } else {
       boolean isValidUUID = false;
       while (!isValidUUID) {
         isValidUUID =
-            cassandraAccountService.getUserByUUID(user.getUserId()).isEmpty().toBlocking().first();
+            accountDataClientService.getUserByUUID(user.getUserId()).isEmpty().toBlocking().first();
       }
-      cassandraAccountService.addOrUpdateUser(user);
-      if (cassandraAccountService.getUserByUsername(user.getUsername()).isEmpty().toBlocking()
+      accountDataClientService.addOrUpdateUser(user);
+      if (accountDataClientService.getUserByUsername(user.getUsername()).isEmpty().toBlocking()
           .first()) {
         throw new RuntimeException("Unable to create user");
       }

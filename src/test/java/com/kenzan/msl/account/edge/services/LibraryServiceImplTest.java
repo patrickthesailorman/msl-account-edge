@@ -6,7 +6,7 @@ import com.google.common.base.Optional;
 import com.kenzan.msl.account.client.dto.AlbumsByUserDto;
 import com.kenzan.msl.account.client.dto.ArtistsByUserDto;
 import com.kenzan.msl.account.client.dto.SongsByUserDto;
-import com.kenzan.msl.account.client.services.CassandraAccountService;
+import com.kenzan.msl.account.client.services.AccountDataClientService;
 import com.kenzan.msl.account.edge.TestConstants;
 import com.kenzan.msl.account.edge.services.impl.LibraryServiceHelperImpl;
 import com.kenzan.msl.account.edge.services.impl.LibraryServiceImpl;
@@ -42,7 +42,7 @@ public class LibraryServiceImplTest extends TestConstants {
   private Result<ArtistsByUserDto> artistByUserDtoResult;
   private Result<SongsByUserDto> songsByUserDtoResult;
 
-  private CassandraAccountService cassandraAccountService;
+  private AccountDataClientService accountDataClientService;
   private RatingsServiceImpl ratingsServiceImpl;
   private LibraryServiceHelperImpl libraryServiceHelperImpl;
   private LibraryServiceImpl libraryServiceImpl;
@@ -52,12 +52,12 @@ public class LibraryServiceImplTest extends TestConstants {
     albumsByUserDtoResult = Mockito.mock(Result.class);
     artistByUserDtoResult = Mockito.mock(Result.class);
     songsByUserDtoResult = Mockito.mock(Result.class);
-    cassandraAccountService = Mockito.mock(CassandraAccountService.class);
+    accountDataClientService = Mockito.mock(AccountDataClientService.class);
 
     ratingsServiceImpl = Mockito.mock(RatingsServiceImpl.class);
     libraryServiceHelperImpl = Mockito.mock(LibraryServiceHelperImpl.class);
     libraryServiceImpl =
-        new LibraryServiceImpl(cassandraAccountService, libraryServiceHelperImpl,
+        new LibraryServiceImpl(accountDataClientService, libraryServiceHelperImpl,
             ratingsServiceImpl);
     PowerMockito.mockStatic(Translators.class);
 
@@ -83,7 +83,7 @@ public class LibraryServiceImplTest extends TestConstants {
 
     libraryServiceImpl.add(ARTIST_UUID.toString(), SESSION_TOKEN.toString(),
         ContentType.ARTIST.value);
-    verify(cassandraAccountService, times(1)).addOrUpdateArtistsByUser(anyObject());
+    verify(accountDataClientService, times(1)).addOrUpdateArtistsByUser(anyObject());
   }
 
   @Test
@@ -93,7 +93,7 @@ public class LibraryServiceImplTest extends TestConstants {
 
     libraryServiceImpl
         .add(ALBUM_UUID.toString(), SESSION_TOKEN.toString(), ContentType.ALBUM.value);
-    verify(cassandraAccountService, times(1)).addOrUpdateAlbumsByUser(anyObject());
+    verify(accountDataClientService, times(1)).addOrUpdateAlbumsByUser(anyObject());
   }
 
   @Test
@@ -102,7 +102,7 @@ public class LibraryServiceImplTest extends TestConstants {
     PowerMockito.when(Translators.translate(SONG_BO)).thenCallRealMethod();
 
     libraryServiceImpl.add(SONG_UUID.toString(), SESSION_TOKEN.toString(), ContentType.SONG.value);
-    verify(cassandraAccountService, times(1)).addOrUpdateSongsByUser(anyObject());
+    verify(accountDataClientService, times(1)).addOrUpdateSongsByUser(anyObject());
   }
 
   @Test(expected = RuntimeException.class)
@@ -130,9 +130,9 @@ public class LibraryServiceImplTest extends TestConstants {
 
   private void mockGetMyLibraryAlbums() {
     when(
-        cassandraAccountService.getAlbumsByUser(any(UUID.class), eq(Optional.absent()),
+        accountDataClientService.getAlbumsByUser(any(UUID.class), eq(Optional.absent()),
             eq(Optional.absent()))).thenReturn(Observable.just(resultSet));
-    when(cassandraAccountService.mapAlbumsByUser(anyObject())).thenReturn(
+    when(accountDataClientService.mapAlbumsByUser(anyObject())).thenReturn(
         Observable.just(albumsByUserDtoResult));
     PowerMockito.stub(PowerMockito.method(Translators.class, "translateAlbumsByUserDto")).toReturn(
         albumList);
@@ -140,9 +140,9 @@ public class LibraryServiceImplTest extends TestConstants {
 
   private void mockGetMyLibraryArtists() {
     when(
-        cassandraAccountService.getArtistsByUser(any(UUID.class), eq(Optional.absent()),
+        accountDataClientService.getArtistsByUser(any(UUID.class), eq(Optional.absent()),
             eq(Optional.absent()))).thenReturn(Observable.just(resultSet));
-    when(cassandraAccountService.mapArtistByUser(anyObject())).thenReturn(
+    when(accountDataClientService.mapArtistByUser(anyObject())).thenReturn(
         Observable.just(artistByUserDtoResult));
     PowerMockito.stub(PowerMockito.method(Translators.class, "translateArtistByUserDto")).toReturn(
         artistList);
@@ -150,9 +150,9 @@ public class LibraryServiceImplTest extends TestConstants {
 
   private void mockGetMyLibrarySongs() {
     when(
-        cassandraAccountService.getSongsByUser(any(UUID.class), eq(Optional.absent()),
+        accountDataClientService.getSongsByUser(any(UUID.class), eq(Optional.absent()),
             eq(Optional.absent()))).thenReturn(Observable.just(resultSet));
-    when(cassandraAccountService.mapSongsByUser(anyObject())).thenReturn(
+    when(accountDataClientService.mapSongsByUser(anyObject())).thenReturn(
         Observable.just(songsByUserDtoResult));
     PowerMockito.stub(PowerMockito.method(Translators.class, "translateSongsByUserDto")).toReturn(
         songList);

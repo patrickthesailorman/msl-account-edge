@@ -6,11 +6,12 @@ package com.kenzan.msl.account.edge.services.impl;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.mapping.Result;
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
 import com.kenzan.msl.account.edge.services.LibraryServiceHelper;
 import com.kenzan.msl.catalog.client.dto.AlbumArtistBySongDto;
 import com.kenzan.msl.catalog.client.dto.SongsAlbumsByArtistDto;
 import com.kenzan.msl.catalog.client.dto.SongsArtistByAlbumDto;
-import com.kenzan.msl.catalog.client.services.CassandraCatalogService;
+import com.kenzan.msl.catalog.client.services.CatalogDataClientService;
 import com.kenzan.msl.common.bo.AlbumBo;
 import com.kenzan.msl.common.bo.ArtistBo;
 import com.kenzan.msl.common.bo.SongBo;
@@ -20,15 +21,16 @@ import java.util.UUID;
 
 public class LibraryServiceHelperImpl implements LibraryServiceHelper {
 
-  private final CassandraCatalogService cassandraCatalogService;
+  private final CatalogDataClientService catalogDataClientService;
 
   /**
    * Constructor
    *
-   * @param cassandraCatalogService
+   * @param catalogDataClientService com.kenzan.msl.account.client.services.CatalogDataClientService
    */
-  public LibraryServiceHelperImpl(final CassandraCatalogService cassandraCatalogService) {
-    this.cassandraCatalogService = cassandraCatalogService;
+  @Inject
+  public LibraryServiceHelperImpl(final CatalogDataClientService catalogDataClientService) {
+    this.catalogDataClientService = catalogDataClientService;
   }
 
   /**
@@ -40,10 +42,10 @@ public class LibraryServiceHelperImpl implements LibraryServiceHelper {
   @Override
   public Optional<ArtistBo> getArtist(final UUID artistId) {
     Observable<ResultSet> observableArtist =
-        cassandraCatalogService.getSongsAlbumsByArtist(artistId, Optional.absent());
+        catalogDataClientService.getSongsAlbumsByArtist(artistId, Optional.absent());
 
     Result<SongsAlbumsByArtistDto> mappingResult =
-        cassandraCatalogService.mapSongsAlbumsByArtist(observableArtist).toBlocking().first();
+        catalogDataClientService.mapSongsAlbumsByArtist(observableArtist).toBlocking().first();
 
     if (mappingResult == null) {
       return Optional.absent();
@@ -81,10 +83,10 @@ public class LibraryServiceHelperImpl implements LibraryServiceHelper {
   @Override
   public Optional<AlbumBo> getAlbum(final UUID albumId) {
     Observable<ResultSet> observableAlbum =
-        cassandraCatalogService.getSongsArtistByAlbum(albumId, Optional.absent());
+        catalogDataClientService.getSongsArtistByAlbum(albumId, Optional.absent());
 
     Result<SongsArtistByAlbumDto> mapResults =
-        cassandraCatalogService.mapSongsArtistByAlbum(observableAlbum).toBlocking().first();
+        catalogDataClientService.mapSongsArtistByAlbum(observableAlbum).toBlocking().first();
 
     if (null == mapResults) {
       return Optional.absent();
@@ -120,10 +122,10 @@ public class LibraryServiceHelperImpl implements LibraryServiceHelper {
   @Override
   public Optional<SongBo> getSong(final UUID songId) {
     Observable<ResultSet> observableSong =
-        cassandraCatalogService.getAlbumArtistBySong(songId, Optional.absent());
+        catalogDataClientService.getAlbumArtistBySong(songId, Optional.absent());
 
     Result<AlbumArtistBySongDto> mapResults =
-        cassandraCatalogService.mapAlbumArtistBySong(observableSong).toBlocking().first();
+        catalogDataClientService.mapAlbumArtistBySong(observableSong).toBlocking().first();
 
     if (null == mapResults) {
       return Optional.absent();
