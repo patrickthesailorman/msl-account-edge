@@ -16,7 +16,10 @@ import com.kenzan.msl.ratings.client.services.RatingsDataClientServiceImpl;
 import com.netflix.governator.guice.lazy.LazySingletonScope;
 import io.swagger.api.AccountEdgeApiService;
 import io.swagger.api.factories.AccountEdgeApiServiceFactory;
+import io.swagger.api.impl.AccountEdgeApiOriginFilter;
 import io.swagger.api.impl.AccountEdgeApiServiceImpl;
+import io.swagger.api.impl.AccountEdgeSessionToken;
+import io.swagger.api.impl.AccountEdgeSessionTokenImpl;
 
 /**
  * @author Kenzan
@@ -25,6 +28,10 @@ public class AccountEdgeModule extends AbstractModule {
   @Override
   protected void configure() {
     requestStaticInjection(AccountEdgeApiServiceFactory.class);
+    requestStaticInjection(AccountEdgeApiOriginFilter.class);
+
+    bind(AccountEdgeSessionToken.class).to(AccountEdgeSessionTokenImpl.class).in(
+        LazySingletonScope.get());
     bind(RatingsDataClientService.class).to(RatingsDataClientServiceImpl.class).in(
         LazySingletonScope.get());
     bind(CatalogDataClientService.class).to(CatalogDataClientServiceImpl.class).in(

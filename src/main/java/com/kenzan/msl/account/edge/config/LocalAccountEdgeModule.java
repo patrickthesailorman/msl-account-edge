@@ -17,6 +17,8 @@ import com.netflix.governator.guice.lazy.LazySingletonScope;
 import io.swagger.api.AccountEdgeApiService;
 import io.swagger.api.factories.AccountEdgeApiServiceFactory;
 import io.swagger.api.impl.AccountEdgeApiServiceImpl;
+import io.swagger.api.impl.AccountEdgeSessionToken;
+import io.swagger.api.impl.AccountEdgeSessionTokenImpl;
 
 /**
  * @author Kenzan
@@ -26,18 +28,20 @@ public class LocalAccountEdgeModule extends AbstractModule {
   @Override
   protected void configure() {
     requestStaticInjection(AccountEdgeApiServiceFactory.class);
+    bind(AccountEdgeSessionToken.class).to(AccountEdgeSessionTokenImpl.class).in(
+      LazySingletonScope.get());
     bind(RatingsDataClientService.class).to(RatingsDataClientServiceStub.class).in(
-        LazySingletonScope.get());
+    LazySingletonScope.get());
     bind(CatalogDataClientService.class).to(CatalogDataClientServiceStub.class).in(
-        LazySingletonScope.get());
+    LazySingletonScope.get());
 
     bind(LibraryServiceHelper.class).to(LibraryServiceHelperStub.class)
-        .in(LazySingletonScope.get());
+    .in(LazySingletonScope.get());
     bind(LibraryService.class).to(LibraryServiceStub.class).in(LazySingletonScope.get());
     bind(RatingsService.class).to(RatingsServiceStub.class).in(LazySingletonScope.get());
 
     bind(AccountEdgeService.class).to(AccountEdgeServiceStub.class).in(LazySingletonScope.get());
     bind(AccountEdgeApiService.class).to(AccountEdgeApiServiceImpl.class).in(
-        LazySingletonScope.get());
+    LazySingletonScope.get());
   }
 }

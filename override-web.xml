@@ -33,20 +33,20 @@
     </listener>
 
     <filter>
-        <filter-name>Guice Filter</filter-name>
-        <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>Guice Filter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
-    <filter>
         <filter-name>AccountEdgeApiOriginFilter</filter-name>
         <filter-class>io.swagger.api.impl.AccountEdgeApiOriginFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>AccountEdgeApiOriginFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>Guice Filter</filter-name>
+        <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Guice Filter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 </web-app>

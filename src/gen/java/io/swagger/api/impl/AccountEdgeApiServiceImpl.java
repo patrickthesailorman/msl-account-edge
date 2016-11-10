@@ -20,18 +20,20 @@ import java.util.UUID;
 public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
 
     private AccountEdgeService accountService;
+    private AccountEdgeSessionToken accountEdgeSessionToken;
 
     @Inject
-    public AccountEdgeApiServiceImpl (final AccountEdgeService accountEdgeService) {
-      this.accountService = accountService;
+    public AccountEdgeApiServiceImpl (final AccountEdgeService accountEdgeService, final AccountEdgeSessionToken accountEdgeSessionToken) {
+        this.accountService = accountService;
+        this.accountEdgeSessionToken = accountEdgeSessionToken;
     }
 
     @Override
     public Response getMyLibrary()
             throws NotFoundException {
-        if (AccountEdgeSessionToken.getInstance().isValidToken()) {
+        if (accountEdgeSessionToken.isValidToken()) {
             try {
-                MyLibrary myLibrary = accountService.getMyLibrary(AccountEdgeSessionToken.getInstance().getTokenValue()).toBlocking().first();
+                MyLibrary myLibrary = accountService.getMyLibrary(accountEdgeSessionToken.getTokenValue()).toBlocking().first();
                 return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success", myLibrary)).build();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -52,9 +54,9 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
             return Response.status(Response.Status.BAD_REQUEST).entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.ERROR, "Required parameter 'albumId' is null or empty.")).build();
         }
 
-        if (AccountEdgeSessionToken.getInstance().isValidToken()) {
+        if (accountEdgeSessionToken.isValidToken()) {
             try {
-                accountService.addToLibrary(albumId, AccountEdgeSessionToken.getInstance().getTokenValue(), "Album");
+                accountService.addToLibrary(albumId, accountEdgeSessionToken.getTokenValue(), "Album");
                 return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success")).build();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -75,9 +77,9 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
             return Response.status(Response.Status.BAD_REQUEST).entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.ERROR, "Required parameter 'artistId' is null or empty.")).build();
         }
 
-        if (AccountEdgeSessionToken.getInstance().isValidToken()) {
+        if (accountEdgeSessionToken.isValidToken()) {
             try {
-                accountService.addToLibrary(artistId, AccountEdgeSessionToken.getInstance().getTokenValue(), "Artist");
+                accountService.addToLibrary(artistId, accountEdgeSessionToken.getTokenValue(), "Artist");
                 return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success")).build();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -97,9 +99,9 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
         if (StringUtils.isEmpty(songId)) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.ERROR, "Required parameter 'songId' is null or empty.")).build();
         }
-        if (AccountEdgeSessionToken.getInstance().isValidToken()) {
+        if (accountEdgeSessionToken.isValidToken()) {
             try {
-                accountService.addToLibrary(songId, AccountEdgeSessionToken.getInstance().getTokenValue(), "Song");
+                accountService.addToLibrary(songId, accountEdgeSessionToken.getTokenValue(), "Song");
                 return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success")).build();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -119,9 +121,9 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
         if (StringUtils.isEmpty(songId) || StringUtils.isEmpty(timestamp)) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.ERROR, "Required parameter 'songId' or 'timestamp' is null or empty.")).build();
         }
-        if (AccountEdgeSessionToken.getInstance().isValidToken()) {
+        if (accountEdgeSessionToken.isValidToken()) {
             try {
-                accountService.removeFromLibrary(songId, timestamp, AccountEdgeSessionToken.getInstance().getTokenValue(), "Song");
+                accountService.removeFromLibrary(songId, timestamp, accountEdgeSessionToken.getTokenValue(), "Song");
                 return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success")).build();
             } catch (RuntimeException e) {
                 e.printStackTrace();
@@ -140,9 +142,9 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
         if (StringUtils.isEmpty(artistId) || StringUtils.isEmpty(timestamp)) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.ERROR, "Required parameter 'artistId' is null or empty.")).build();
         }
-        if (AccountEdgeSessionToken.getInstance().isValidToken()) {
+        if (accountEdgeSessionToken.isValidToken()) {
             try {
-                accountService.removeFromLibrary(artistId, timestamp, AccountEdgeSessionToken.getInstance().getTokenValue(), "Artist");
+                accountService.removeFromLibrary(artistId, timestamp, accountEdgeSessionToken.getTokenValue(), "Artist");
                 return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success")).build();
             } catch (RuntimeException e) {
                 e.printStackTrace();
@@ -161,9 +163,9 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
         if (StringUtils.isEmpty(albumId) || StringUtils.isEmpty(timestamp)) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.ERROR, "Required parameter 'albumId' is null or empty.")).build();
         }
-        if (AccountEdgeSessionToken.getInstance().isValidToken()) {
+        if (accountEdgeSessionToken.isValidToken()) {
             try {
-                accountService.removeFromLibrary(albumId, timestamp, AccountEdgeSessionToken.getInstance().getTokenValue(), "Album");
+                accountService.removeFromLibrary(albumId, timestamp, accountEdgeSessionToken.getTokenValue(), "Album");
                 return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success")).build();
             } catch (RuntimeException e) {
                 e.printStackTrace();
