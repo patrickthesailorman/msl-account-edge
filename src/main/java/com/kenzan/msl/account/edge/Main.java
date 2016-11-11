@@ -2,6 +2,7 @@ package com.kenzan.msl.account.edge;
 
 import com.google.inject.Injector;
 import com.kenzan.msl.account.client.config.AccountDataClientModule;
+import com.kenzan.msl.account.client.config.LocalAccountDataClientModule;
 import com.kenzan.msl.account.edge.config.AccountEdgeModule;
 import com.kenzan.msl.account.edge.config.RestModule;
 import com.netflix.governator.guice.LifecycleInjector;
@@ -11,6 +12,7 @@ import io.swagger.api.impl.AccountEdgeApiOriginFilter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import javax.servlet.DispatcherType;
@@ -27,9 +29,11 @@ public class Main {
    */
   public static void main(String[] args) throws Exception {
 
+    // use Local*DataClientModule when config file is local
+    // use *DataClientModule when archaius config to use are the ones in definition in config.properties
     Injector injector =
         LifecycleInjector.builder()
-            .withModules(new RestModule(), new AccountDataClientModule(), new AccountEdgeModule())
+            .withModules(new LocalAccountDataClientModule(), new AccountEdgeModule())
             .build().createInjector();
     LifecycleManager manager = injector.getInstance(LifecycleManager.class);
 
@@ -42,8 +46,10 @@ public class Main {
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
 
-    jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",
+    jerseyServlet.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES,
         AccountEdgeApi.class.getCanonicalName());
+    jerseyServlet.setInitParameter(ServerProperties.PROVIDER_PACKAGES, "io.swagger.jaxrs.json;io.swagger.jaxrs.listing;io.swagger.api");
+    jerseyServlet.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
 
     try {
       manager.start();
