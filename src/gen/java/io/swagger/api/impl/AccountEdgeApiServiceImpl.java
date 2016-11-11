@@ -19,12 +19,12 @@ import java.util.UUID;
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JaxRSServerCodegen", date = "2016-01-25T12:48:02.255-06:00")
 public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
 
-    private AccountEdgeService accountService;
+    private AccountEdgeService accountEdgeService;
     private AccountEdgeSessionToken accountEdgeSessionToken;
 
     @Inject
     public AccountEdgeApiServiceImpl (final AccountEdgeService accountEdgeService, final AccountEdgeSessionToken accountEdgeSessionToken) {
-        this.accountService = accountService;
+        this.accountEdgeService = accountEdgeService;
         this.accountEdgeSessionToken = accountEdgeSessionToken;
     }
 
@@ -33,7 +33,7 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
             throws NotFoundException {
         if (accountEdgeSessionToken.isValidToken()) {
             try {
-                MyLibrary myLibrary = accountService.getMyLibrary(accountEdgeSessionToken.getTokenValue()).toBlocking().first();
+                MyLibrary myLibrary = accountEdgeService.getMyLibrary(accountEdgeSessionToken.getTokenValue()).toBlocking().first();
                 return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success", myLibrary)).build();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -56,7 +56,7 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
 
         if (accountEdgeSessionToken.isValidToken()) {
             try {
-                accountService.addToLibrary(albumId, accountEdgeSessionToken.getTokenValue(), "Album");
+                accountEdgeService.addToLibrary(albumId, accountEdgeSessionToken.getTokenValue(), "Album");
                 return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success")).build();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -79,7 +79,7 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
 
         if (accountEdgeSessionToken.isValidToken()) {
             try {
-                accountService.addToLibrary(artistId, accountEdgeSessionToken.getTokenValue(), "Artist");
+                accountEdgeService.addToLibrary(artistId, accountEdgeSessionToken.getTokenValue(), "Artist");
                 return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success")).build();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -101,7 +101,7 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
         }
         if (accountEdgeSessionToken.isValidToken()) {
             try {
-                accountService.addToLibrary(songId, accountEdgeSessionToken.getTokenValue(), "Song");
+                accountEdgeService.addToLibrary(songId, accountEdgeSessionToken.getTokenValue(), "Song");
                 return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success")).build();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -123,7 +123,7 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
         }
         if (accountEdgeSessionToken.isValidToken()) {
             try {
-                accountService.removeFromLibrary(songId, timestamp, accountEdgeSessionToken.getTokenValue(), "Song");
+                accountEdgeService.removeFromLibrary(songId, timestamp, accountEdgeSessionToken.getTokenValue(), "Song");
                 return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success")).build();
             } catch (RuntimeException e) {
                 e.printStackTrace();
@@ -144,7 +144,7 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
         }
         if (accountEdgeSessionToken.isValidToken()) {
             try {
-                accountService.removeFromLibrary(artistId, timestamp, accountEdgeSessionToken.getTokenValue(), "Artist");
+                accountEdgeService.removeFromLibrary(artistId, timestamp, accountEdgeSessionToken.getTokenValue(), "Artist");
                 return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success")).build();
             } catch (RuntimeException e) {
                 e.printStackTrace();
@@ -165,7 +165,7 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
         }
         if (accountEdgeSessionToken.isValidToken()) {
             try {
-                accountService.removeFromLibrary(albumId, timestamp, accountEdgeSessionToken.getTokenValue(), "Album");
+                accountEdgeService.removeFromLibrary(albumId, timestamp, accountEdgeSessionToken.getTokenValue(), "Album");
                 return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success")).build();
             } catch (RuntimeException e) {
                 e.printStackTrace();
@@ -205,7 +205,7 @@ public class AccountEdgeApiServiceImpl extends AccountEdgeApiService {
             newUser.setUsername(email);
             newUser.setCreationTimestamp(new Date());
             newUser.setUserId(UUID.randomUUID());
-            accountService.registerUser(newUser);
+            accountEdgeService.registerUser(newUser);
             return Response.ok().entity(new AccountEdgeApiResponseMessage(AccountEdgeApiResponseMessage.OK, "success")).build();
         }
         catch (RuntimeException e) {
