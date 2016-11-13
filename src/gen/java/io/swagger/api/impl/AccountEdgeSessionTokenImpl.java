@@ -9,6 +9,11 @@ import java.util.UUID;
 public class AccountEdgeSessionTokenImpl implements AccountEdgeSessionToken {
 
     public String tokenValue;
+    private String domain = "localhost";
+
+    public void setDomain (String domain) {
+        this.domain = domain;
+    }
 
     public AccountEdgeSessionTokenImpl () {}
 
