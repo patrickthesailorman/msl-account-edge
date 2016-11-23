@@ -23,56 +23,37 @@ import io.swagger.api.impl.AccountEdgeApiOriginFilter;
 import io.swagger.api.impl.AccountEdgeApiServiceImpl;
 import io.swagger.api.impl.AccountEdgeSessionToken;
 import io.swagger.api.impl.AccountEdgeSessionTokenImpl;
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.File;
-import java.util.Properties;
 
 /**
+ * Account Edge Module, a support class for Modules which reduces repetition and results in a more readable configuration
+ * if no archaius.configurationSource.additionalUrls property is passed in, archaius uses default configuration. See readme to
+ * understand how to pass in these variables
+ *
  * @author Kenzan
  */
 public class AccountEdgeModule extends AbstractModule {
 
-    private String DEFAULT_CLIENT_PORT= "3000";
+    private final String DEFAULT_CLIENT_PORT = "3000";
 
-    private final DynamicStringProperty CLIENT_PORT =
+    private DynamicStringProperty CLIENT_PORT =
         DynamicPropertyFactory.getInstance().getStringProperty("clientPort", DEFAULT_CLIENT_PORT);
 
     @Override
     protected void configure() {
-        configureArchaius();
         bindConstant().annotatedWith(Names.named("clientPort")).to(CLIENT_PORT.get());
 
         requestStaticInjection(AccountEdgeApiServiceFactory.class);
         requestStaticInjection(AccountEdgeApiOriginFilter.class);
+        bind(AccountEdgeSessionToken.class).to(AccountEdgeSessionTokenImpl.class).in(LazySingletonScope.get());
 
-        bind(AccountEdgeSessionToken.class).to(AccountEdgeSessionTokenImpl.class).in(
-        LazySingletonScope.get());
-        bind(RatingsDataClientService.class).to(RatingsDataClientServiceImpl.class).in(
-        LazySingletonScope.get());
-        bind(CatalogDataClientService.class).to(CatalogDataClientServiceImpl.class).in(
-        LazySingletonScope.get());
+        bind(RatingsDataClientService.class).to(RatingsDataClientServiceImpl.class).in(LazySingletonScope.get());
+        bind(CatalogDataClientService.class).to(CatalogDataClientServiceImpl.class).in(LazySingletonScope.get());
 
-        bind(AccountEdgeService.class).to(AccountEdgeServiceImpl.class).in(LazySingletonScope.get());
-        bind(LibraryServiceHelper.class).to(LibraryServiceHelperImpl.class)
-        .in(LazySingletonScope.get());
+        bind(LibraryServiceHelper.class).to(LibraryServiceHelperImpl.class).in(LazySingletonScope.get());
         bind(LibraryService.class).to(LibraryServiceImpl.class).in(LazySingletonScope.get());
         bind(RatingsService.class).to(RatingsServiceImpl.class).in(LazySingletonScope.get());
 
         bind(AccountEdgeService.class).to(AccountEdgeServiceImpl.class).in(LazySingletonScope.get());
-        bind(AccountEdgeApiService.class).to(AccountEdgeApiServiceImpl.class).in(
-        LazySingletonScope.get());
-    }
-
-    private void configureArchaius() {
-        Properties props = System.getProperties();
-        String ENV = props.getProperty("env");
-        if (StringUtils.isEmpty(ENV) || ENV.toLowerCase().contains("local")) {
-            String configUrl = "file://" + System.getProperty("user.dir") + "/../msl-account-edge-config/edge-config.properties";
-            File f = new File(configUrl);
-            if(f.exists() && !f.isDirectory()) {
-                System.setProperty("archaius.configurationSource.additionalUrls", configUrl);
-            }
-        }
+        bind(AccountEdgeApiService.class).to(AccountEdgeApiServiceImpl.class).in(LazySingletonScope.get());
     }
 }
