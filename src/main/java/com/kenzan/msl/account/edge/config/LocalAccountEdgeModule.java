@@ -1,6 +1,7 @@
 package com.kenzan.msl.account.edge.config;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
 import com.kenzan.msl.account.edge.services.AccountEdgeService;
 import com.kenzan.msl.account.edge.services.LibraryService;
 import com.kenzan.msl.account.edge.services.LibraryServiceHelper;
@@ -16,6 +17,7 @@ import com.kenzan.msl.ratings.client.services.RatingsDataClientServiceStub;
 import com.netflix.governator.guice.lazy.LazySingletonScope;
 import io.swagger.api.AccountEdgeApiService;
 import io.swagger.api.factories.AccountEdgeApiServiceFactory;
+import io.swagger.api.impl.AccountEdgeApiOriginFilter;
 import io.swagger.api.impl.AccountEdgeApiServiceImpl;
 import io.swagger.api.impl.AccountEdgeSessionToken;
 import io.swagger.api.impl.AccountEdgeSessionTokenImpl;
@@ -25,23 +27,22 @@ import io.swagger.api.impl.AccountEdgeSessionTokenImpl;
  */
 public class LocalAccountEdgeModule extends AbstractModule {
 
-  @Override
-  protected void configure() {
-    requestStaticInjection(AccountEdgeApiServiceFactory.class);
-    bind(AccountEdgeSessionToken.class).to(AccountEdgeSessionTokenImpl.class).in(
-      LazySingletonScope.get());
-    bind(RatingsDataClientService.class).to(RatingsDataClientServiceStub.class).in(
-    LazySingletonScope.get());
-    bind(CatalogDataClientService.class).to(CatalogDataClientServiceStub.class).in(
-    LazySingletonScope.get());
+    @Override
+    protected void configure() {
+        bindConstant().annotatedWith(Names.named("clientPort")).to("3000");
 
-    bind(LibraryServiceHelper.class).to(LibraryServiceHelperStub.class)
-    .in(LazySingletonScope.get());
-    bind(LibraryService.class).to(LibraryServiceStub.class).in(LazySingletonScope.get());
-    bind(RatingsService.class).to(RatingsServiceStub.class).in(LazySingletonScope.get());
+        requestStaticInjection(AccountEdgeApiServiceFactory.class);
+        requestStaticInjection(AccountEdgeApiOriginFilter.class);
+        bind(AccountEdgeSessionToken.class).to(AccountEdgeSessionTokenImpl.class).in(LazySingletonScope.get());
 
-    bind(AccountEdgeService.class).to(AccountEdgeServiceStub.class).in(LazySingletonScope.get());
-    bind(AccountEdgeApiService.class).to(AccountEdgeApiServiceImpl.class).in(
-    LazySingletonScope.get());
-  }
+        bind(RatingsDataClientService.class).to(RatingsDataClientServiceStub.class).in(LazySingletonScope.get());
+        bind(CatalogDataClientService.class).to(CatalogDataClientServiceStub.class).in(LazySingletonScope.get());
+
+        bind(LibraryServiceHelper.class).to(LibraryServiceHelperStub.class).in(LazySingletonScope.get());
+        bind(LibraryService.class).to(LibraryServiceStub.class).in(LazySingletonScope.get());
+        bind(RatingsService.class).to(RatingsServiceStub.class).in(LazySingletonScope.get());
+
+        bind(AccountEdgeService.class).to(AccountEdgeServiceStub.class).in(LazySingletonScope.get());
+        bind(AccountEdgeApiService.class).to(AccountEdgeApiServiceImpl.class).in(LazySingletonScope.get());
+    }
 }
