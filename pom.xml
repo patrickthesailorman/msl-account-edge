@@ -372,6 +372,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Commented to allow for local builds to succeed. Need some kind of conditional inclusion so local builds don't require RPM
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>rpm-maven-plugin</artifactId>
@@ -416,7 +417,7 @@
                     </mappings>
                 </configuration>
             </plugin>
-
+            --> 
         </plugins>
     </build>
 
